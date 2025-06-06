@@ -60,7 +60,10 @@ export default async function handler(req, res) {
             <meta property="og:video:type" content="video/${fileExt}" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
-          ` : ''}
+            <meta property="og:image" content="${previewUrl}" />
+          ` : `
+            <meta property="og:image" content="${postUrl}" />
+          `}
 
           <!-- Twitter -->
           <meta name="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
