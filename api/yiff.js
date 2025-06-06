@@ -84,7 +84,7 @@ export default async function handler(req, res) {
           ` : ''}
         </head>
         <body>
-            <script>document.href = "https://${baseDomain}/posts/${postId}"</script>
+            <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
         </body>
         </html>
       `.trim();
