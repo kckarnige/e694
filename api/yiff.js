@@ -64,7 +64,7 @@ export default async function handler(req, res) {
           <meta property="og:title" content="#${postId}" />
           <meta property="og:description" content="By ${postAuthor}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
-          <meta property="og:site_name" content="Image from ${baseDomain} • e179">
+          <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
