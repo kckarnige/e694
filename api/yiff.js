@@ -45,8 +45,8 @@ export default async function handler(req, res) {
       var authorNum = postInfo.tags.artist.length;
       if (postInfo.tags.artist.includes("sound_warning")) {authorNum--}
       if (postInfo.tags.artist.includes("third-party_edit")) {authorNum--}
-      
-      if (postInfo.tags.artist.length == 1) {
+
+      if (authorNum == 1) {
         postAuthor = `${postInfo.tags.artist[0]}`
       } else {
         postAuthor = `${postInfo.tags.artist[0]} +${authorNum - 1}`
