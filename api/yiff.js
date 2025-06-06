@@ -41,7 +41,6 @@ export default async function handler(req, res) {
       const previewUrl = postInfo.preview?.url;
       const postUrl = `https://${host}/api?postId=${postId}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
-      const escapedTitle = `Post #${postId} from ${baseDomain}`;
       const embedHtml = `
         <!DOCTYPE html>
         <html>
@@ -51,16 +50,16 @@ export default async function handler(req, res) {
           <meta name="theme-color" content="#00549e" />
 
           <!-- Open Graph -->
-          <meta property="og:title" content="${escapedTitle}" />
-          <meta property="og:description" content="View on ${host}: <a href=https://${baseDomain}/posts/${postId}>${baseDomain}/posts/${postId}</a> />
+          <meta property="og:title" content="#${postId}" />
+          <meta property="og:description" content="From ${baseDomain}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
-          <meta property="og:image" content="${previewUrl}" />
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
+            <meta property="og:site_name" content="${baseDomain}">
           ` : `
             <meta property="og:image" content="${postUrl}" />
           `}
