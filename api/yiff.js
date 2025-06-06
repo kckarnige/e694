@@ -35,10 +35,11 @@ export default async function handler(req, res) {
       return res.status(imageResponse.status).json({ error: "Failed to fetch image" });
     }
 
-    const contentType = imageResponse.headers.get("content-type");
-    const buffer = await imageResponse.buffer();
+    const arrayBuffer = await imageResponse.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const contentType = imageResponse.headers.get("content-type") || "image/jpeg";
 
-    res.setHeader("Content-Type", contentType || "image/jpeg");
+    res.setHeader("Content-Type", contentType);
     res.setHeader("Access-Control-Allow-Origin", "*");
 
     return res.status(200).send(buffer);
