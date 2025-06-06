@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="${escapedTitle}" />
-          <meta property="og:description" content="View on ${host}: https://${baseDomain}/posts/${postId}" />
+          <meta property="og:description" content="View on ${host}: <a href=https://${baseDomain}/posts/${postId}>${baseDomain}/posts/${postId}</a> />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
           <meta property="og:image" content="${previewUrl}" />
           ${isVideo ? `
