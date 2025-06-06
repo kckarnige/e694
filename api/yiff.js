@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   const {
     postId,
     embed = false
-   } = req.query;
+  } = req.query;
 
   if (!postId) {
     return res.status(400).json({ error: "Post ID not specified!" });
@@ -36,13 +36,12 @@ export default async function handler(req, res) {
       }
     });
 
-    const fileExt = postInfo.file.ext;
-    const previewUrl = postInfo.preview?.url;
-    const postUrl = `https://${host}/api?postId=${postId}`;
-    const isVideo = ["webm", "mp4"].includes(fileExt);
-    const escapedTitle = `Post #${postId} from ${baseDomain}`;
-
     if (embed === "true") {
+      const fileExt = postInfo.file.ext;
+      const previewUrl = postInfo.preview?.url;
+      const postUrl = `https://${host}/api?postId=${postId}`;
+      const isVideo = ["webm", "mp4"].includes(fileExt);
+      const escapedTitle = `Post #${postId} from ${baseDomain}`;
       const embedHtml = `
         <!DOCTYPE html>
         <html>
@@ -82,7 +81,7 @@ export default async function handler(req, res) {
       res.setHeader("Content-Type", "text/html");
       return res.status(200).send(embedHtml);
     }
-    
+
     if (!imageResponse.ok) {
       return res.status(imageResponse.status).json({ error: "Failed to fetch image" });
     }
