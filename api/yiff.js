@@ -33,6 +33,41 @@ export default async function handler(req, res) {
       }
     });
 
+    const fileExt = postInfo.file.ext;
+    const previewUrl = postInfo.preview?.url;
+    const isVideo = ["webm", "mp4"].includes(fileExt);
+
+    if (embed === "true") {
+      const postUrl = `https://${host}/api?postId=${postId}`;
+      const escapedTitle = `Post #${postId} from ${baseDomain}`;
+      const embedHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta property="og:title" content="${escapedTitle}" />
+          ${isVideo
+            ? `
+              <meta property="og:video" content="${postUrl}" />
+              <meta property="og:video:type" content="video/${fileExt}" />
+              <meta property="og:image" content="${previewUrl}" />
+            `
+            : `
+              <meta property="og:image" content="${postUrl}" />
+            `
+          }
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="theme-color" content="#00549e" />
+        </head>
+        <body>
+          <script>document.href = ${postUrl}</script>
+        </body>
+        </html>
+      `.trim();
+
+      res.setHeader("Content-Type", "text/html");
+      return res.status(200).send(embedHtml);
+    }
+    
     if (!imageResponse.ok) {
       return res.status(imageResponse.status).json({ error: "Failed to fetch image" });
     }
