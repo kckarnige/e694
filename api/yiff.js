@@ -5,7 +5,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Post ID not specified!" });
   }
 
-  const postUrl = `https://e621.net/posts/${postId}.json`;
+  const host = req.headers.host || "";
+  const baseDomain = host.includes("e926") ? "e926.net" : "e621.net";
+  const postUrl = `https://${baseDomain}/posts/${postId}.json`;
 
   try {
     const postData = await fetch(postUrl, {
