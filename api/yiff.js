@@ -1,5 +1,8 @@
 export default async function handler(req, res) {
-  const { postId } = req.query;
+  const {
+    postId,
+    embed = false
+   } = req.query;
 
   if (!postId) {
     return res.status(400).json({ error: "Post ID not specified!" });
