@@ -41,6 +41,12 @@ export default async function handler(req, res) {
       const previewUrl = postInfo.preview?.url;
       const postUrl = `https://${host}/api?postId=${postId}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
+      var postAuthor;
+      if (postInfo.tags.artist.length == 1) {
+        postAuthor = `${postInfo.tags.artist[0]}`
+      } else {
+        postAuthor = `${postInfo.tags.artist[0]} +${postInfo.tags.artist.length - 1}`
+      }
       const embedHtml = `
         <!DOCTYPE html>
         <html>
@@ -49,12 +55,12 @@ export default async function handler(req, res) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta name="theme-color" content="#00549e" />
           <meta property="title" content="#${postId}" />
-          
+
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId}" />
-          <meta property="og:description" content="By ${postInfo.tags.artist[0]} • ${baseDomain}" />
+          <meta property="og:description" content="By ${postAuthor}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
-          <meta property="og:site_name" content="${baseDomain}">
+          <meta property="og:site_name" content="Image from ${baseDomain} • e179">
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
