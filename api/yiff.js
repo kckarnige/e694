@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       if (postInfo.tags.artist.length == 1) {
         postAuthor = `${postInfo.tags.artist[0]}`
       } else {
-        postAuthor = `${postInfo.tags.artist[0]} +${postInfo.tags.artist.length - 1} others`
+        postAuthor = `${postInfo.tags.artist[0]} +${postInfo.tags.artist.length - 1}`
       }
       const embedHtml = `
         <!DOCTYPE html>
