@@ -51,15 +51,15 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId}" />
-          <meta property="og:description" content="From ${baseDomain}" />
+          <meta property="og:description" content="By ${postInfo.tags.artist[0]} • ${baseDomain}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
+          <meta property="og:site_name" content="${baseDomain}">
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
-            <meta property="og:site_name" content="${baseDomain}">
           ` : `
             <meta property="og:image" content="${postUrl}" />
           `}
@@ -77,8 +77,7 @@ export default async function handler(req, res) {
           ` : ''}
         </head>
         <body>
-          <p>Embed preview for post #${postId} from ${baseDomain}</p>
-          <a href="https://${baseDomain}/posts/${postId}" target="_blank" rel="noopener noreferrer">View on ${baseDomain}</a>
+            <script>document.href = "https://${baseDomain}/posts/${postId}"</script>
         </body>
         </html>
       `.trim();
