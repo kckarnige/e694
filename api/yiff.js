@@ -52,6 +52,7 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="${escapedTitle}" />
+          <meta property="og:description" content="View on ${host}: https://${baseDomain}/posts/${postId}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
           <meta property="og:image" content="${previewUrl}" />
           ${isVideo ? `
@@ -75,6 +76,7 @@ export default async function handler(req, res) {
         </head>
         <body>
           <p>Embed preview for post #${postId} from ${baseDomain}</p>
+          <a href="https://${baseDomain}/posts/${postId}" target="_blank" rel="noopener noreferrer">View on ${baseDomain}</a>
         </body>
         </html>
       `.trim();
