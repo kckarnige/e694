@@ -38,31 +38,43 @@ export default async function handler(req, res) {
 
     const fileExt = postInfo.file.ext;
     const previewUrl = postInfo.preview?.url;
+    const postUrl = `https://${host}/api?postId=${postId}`;
     const isVideo = ["webm", "mp4"].includes(fileExt);
+    const escapedTitle = `Post #${postId} from ${baseDomain}`;
 
     if (embed === "true") {
-      const postUrl = `https://${host}/api?postId=${postId}`;
-      const escapedTitle = `Post #${postId} from ${baseDomain}`;
       const embedHtml = `
         <!DOCTYPE html>
         <html>
         <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+          <!-- Open Graph -->
           <meta property="og:title" content="${escapedTitle}" />
-          ${isVideo
-            ? `
-              <meta property="og:video" content="${postUrl}" />
-              <meta property="og:video:type" content="video/${fileExt}" />
-              <meta property="og:image" content="${previewUrl}" />
-            `
-            : `
-              <meta property="og:image" content="${postUrl}" />
-            `
-          }
-          <meta name="twitter:card" content="summary_large_image" />
-          <meta name="theme-color" content="#00549e" />
+          <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
+          <meta property="og:image" content="${previewUrl}" />
+          ${isVideo ? `
+            <meta property="og:video" content="${postUrl}" />
+            <meta property="og:video:type" content="video/${fileExt}" />
+            <meta property="og:video:width" content="1280" />
+            <meta property="og:video:height" content="720" />
+          ` : ''}
+
+          <!-- Twitter -->
+          <meta name="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
+          <meta name="twitter:title" content="${escapedTitle}" />
+          <meta name="twitter:image" content="${previewUrl}" />
+          ${isVideo ? `
+            <meta name="twitter:player" content="${postUrl}" />
+            <meta name="twitter:player:width" content="1280" />
+            <meta name="twitter:player:height" content="720" />
+            <meta name="twitter:player:stream" content="${postUrl}" />
+            <meta name="twitter:player:stream:content_type" content="video/${fileExt}" />
+          ` : ''}
         </head>
         <body>
-          <script>document.href = ${postUrl}</script>
+          <p>Embed preview for post #${postId} from ${baseDomain}</p>
         </body>
         </html>
       `.trim();
