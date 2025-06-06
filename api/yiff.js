@@ -66,7 +66,7 @@ export default async function handler(req, res) {
 
           <!-- Twitter -->
           <meta name="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
-          <meta name="twitter:title" content="${escapedTitle}" />
+          <meta name="twitter:title" content="Post from ${baseDomain}" />
           <meta name="twitter:image" content="${previewUrl}" />
           ${isVideo ? `
             <meta name="twitter:player" content="${postUrl}" />
