@@ -3,7 +3,7 @@
   "routes": [
     {
       "src": "/api",
-      "dest": "/api/yiff.min.js"
+      "dest": "/api/yiff.js"
     }
   ]
 }
