@@ -42,8 +42,12 @@ export default async function handler(req, res) {
       const postUrl = `https://${host}/api?postId=${postId}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
+      var sndWarn;
       var authorNum = postInfo.tags.artist.length;
-      if (postInfo.tags.artist.includes("sound_warning")) {authorNum--}
+      if (postInfo.tags.artist.includes("sound_warning")) {
+        sndWarn = "🔊 Sound Warning! 🔊"
+        authorNum--
+      }
       if (postInfo.tags.artist.includes("third-party_edit")) {authorNum--}
 
       if (authorNum == 1) {
@@ -62,7 +66,10 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId}" />
-          <meta property="og:description" content="By ${postAuthor}" />
+          <meta property="og:description" content="${sndWarn}
+          
+          
+          By ${postAuthor}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
           <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
           ${isVideo ? `
