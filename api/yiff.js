@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const postJson = await postData.json();
     const postInfo = postJson?.post?.[0];
 
-    if (!postInfo) {
+    if (!postInfo.file.url) {
       return res.status(404).json({ error: "Post data not found" });
     } else {
       const imageResponse = await fetch(postInfo.file.url);
@@ -31,5 +31,6 @@ export default async function handler(req, res) {
     }
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch from E621", details: error.message });
+    document.href = postUrl
   }
 }
