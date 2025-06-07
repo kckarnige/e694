@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     embed = false
   } = req.query;
 
-  if (!postId || !ext && embed == false) {
+  if (!slug) {
     return res.status(400).json({ error: "Invalid or missing post ID and extension" });
   }
 
