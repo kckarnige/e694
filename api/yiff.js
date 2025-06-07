@@ -68,13 +68,10 @@ export default async function handler(req, res) {
           
 
           <!-- Open Graph -->
-          <meta property="og:title" content="#${postId} By ${postAuthor}" />
-          <meta property="article:published_time" content="${postInfo.created_at}" />
-          <meta property="article:modified_time" content="${postInfo.updated_at}" />
+          <meta property="og:title" content="#${postId} by ${postAuthor}" />
           <meta property="og:description" content="${sndWarn}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
-          <meta property="og:site_name" content="e179 (${host})">
-          
+          <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
