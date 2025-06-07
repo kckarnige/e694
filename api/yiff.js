@@ -41,11 +41,12 @@ export default async function handler(req, res) {
       const previewUrl = postInfo.preview?.url;
       const postUrl = `https://${host}/api?postId=${postId}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
+      const isGif = fileExt === "gif";
       var postAuthor;
       var sndWarn = "";
       var authorNum = postInfo.tags.artist.length + postInfo.tags.contributor.length;
-      if (postInfo.tags.artist.includes("sound_warning")) {authorNum--}
-      if (postInfo.tags.artist.includes("third-party_edit")) {authorNum--}
+      if (postInfo.tags.artist.includes("sound_warning")) { authorNum-- }
+      if (postInfo.tags.artist.includes("third-party_edit")) { authorNum-- }
 
       if (postInfo.tags.artist.includes("sound_warning")
         || postInfo.tags.meta.includes("sound")
@@ -53,7 +54,11 @@ export default async function handler(req, res) {
         sndWarn = `<meta property="og:description" content="🔊 Sound Warning! 🔊" />`
       }
 
-      if (authorNum == 1) {
+      if (isGif) {
+        return res.redirect(302, postInfo.file?.url);
+      }
+
+      if (authorNum === 1) {
         postAuthor = `${postInfo.tags.artist[0]}`
       } else {
         postAuthor = `${postInfo.tags.artist[0]} +${authorNum - 1}`
@@ -114,7 +119,7 @@ export default async function handler(req, res) {
 
     const arrayBuffer = await imageResponse.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const contentType = imageResponse.headers.get("content-type") || `image/gif`;
+    const contentType = imageResponse.headers.get("content-type") || `image/${postInfo.file.ext}`;
 
     res.setHeader("Content-Type", contentType);
     res.setHeader("Access-Control-Allow-Origin", "*");
