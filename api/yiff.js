@@ -80,7 +80,7 @@ export default async function handler(req, res) {
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
-          <meta property="og:site_name" content="Video from ${baseDomain} • e179 (${host})">
+            <meta property="og:site_name" content="Video from ${baseDomain} • e179 (${host})">
           ` : `
             <meta property="og:image" content="${postUrl}" />
             <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
