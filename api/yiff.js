@@ -33,6 +33,10 @@ export default async function handler(req, res) {
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
 
+    if (ext === "json") {
+      return res.status(200).json({postData});
+    }
+
     if (!postInfo || !postInfo.file?.url) {
       return res.status(404).json({ error: "Media URL not found in post data" });
     }
