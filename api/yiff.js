@@ -96,9 +96,7 @@ export default async function handler(req, res) {
             <meta name="twitter:player:height" content="720" />
             <meta name="twitter:player:stream" content="${postUrl}" />
             <meta name="twitter:player:stream:content_type" content="video/${fileExt}" />
-          ` : `
-            <meta name="twitter:image" content="${postUrl}" />
-          `}
+          ` : ''}
         </head>
         <body>
             <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
