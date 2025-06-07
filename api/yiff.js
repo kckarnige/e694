@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
-      var authors = postInfo.tags.artist.concat(postInfo.tags.contributor);
+      var authors = (postInfo.tags.artist ?? []).concat(postInfo.tags.contributor ?? []);
       var exclude = ["sound_warning", "third-party_edit"];
       var realAuthors = authors.filter(real => !exclude.includes(real));
 
@@ -61,10 +61,8 @@ export default async function handler(req, res) {
 
       if (realAuthors.length == 1) {
         postAuthor = `${realAuthors[0]}`
-        console.log(realAuthors)
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
-        console.log(realAuthors)
       }
       const embedHtml = `
         <!DOCTYPE html>
@@ -109,7 +107,7 @@ export default async function handler(req, res) {
           `}
         </head>
         <body>
-            <script>console.log(${realAuthors}</script>
+            <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
         </body>
         </html>
       `.trim();
