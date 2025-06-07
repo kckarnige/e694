@@ -17,7 +17,7 @@ For anyone who wants to use an image from the e621 cdn without any issue.
 
 ## Examples:
 
-### Image Example:
+### File Example:
 
 `https://e926-media.vercel.app/5302549.gif`
 
@@ -30,3 +30,7 @@ or
 `https://e926-media.vercel.app/posts/5302549`
 
 ![embed example](https://e926-media.vercel.app/embed_example.png)
+
+Works with videos too!
+
+![video example](https://e926-media.vercel.app/video_example.png)
