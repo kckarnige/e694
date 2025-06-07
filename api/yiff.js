@@ -4,7 +4,7 @@ export default async function handler(req, res) {
     embed = false
   } = req.query;
 
-  if (!slug || !slug.includes('.')) {
+  if (!postId || !ext && embed == false) {
     return res.status(400).json({ error: "Invalid or missing post ID and extension" });
   }
 
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
 
     const postJson = await postData.json();
     const postInfo = postJson?.post;
-    const fileExt = ext;
+    const fileExt = ext ?? postInfo.file.ext;
 
     if (!postInfo || !postInfo.file?.url) {
       return res.status(404).json({ error: "Media URL not found in post data" });

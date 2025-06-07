@@ -4,6 +4,10 @@
     {
       "source": "/api/:slug",
       "destination": "/api/yiff.js?slug=:slug"
+    },
+    {
+      "source": "/api/embed/:postId",
+      "destination": "/api/yiff.js?slug=:postId&embed=true"
     }
   ]
 }
