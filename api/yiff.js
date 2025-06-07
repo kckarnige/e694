@@ -44,11 +44,14 @@ export default async function handler(req, res) {
       var postAuthor;
       var sndWarn = "";
       var authorNum = postInfo.tags.artist.length + postInfo.tags.contributor.length;
-      if (postInfo.tags.artist.includes("sound_warning")) {
-        sndWarn = `<meta property="og:description" content="🔊 Sound Warning! 🔊" />`
-        authorNum--
-      }
+      if (postInfo.tags.artist.includes("sound_warning")) {authorNum--}
       if (postInfo.tags.artist.includes("third-party_edit")) {authorNum--}
+
+      if (postInfo.tags.artist.includes("sound_warning")
+        || postInfo.tags.meta.includes("sound")
+        && !postInfo.tags.meta.includes("no_sound")) {
+        sndWarn = `<meta property="og:description" content="🔊 Sound Warning! 🔊" />`
+      }
 
       if (authorNum == 1) {
         postAuthor = `${postInfo.tags.artist[0]}`
