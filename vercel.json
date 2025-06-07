@@ -5,5 +5,31 @@
       "src": "/api",
       "dest": "/api/yiff.js"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/:postId.webm",
+      "destination": "/api?postId=:postId"
+    },
+    {
+      "source": "/api/:postId.mp4",
+      "destination": "/api?postId=:postId"
+    },
+    {
+      "source": "/api/:postId.png",
+      "destination": "/api?postId=:postId"
+    },
+    {
+      "source": "/api/:postId.jpeg",
+      "destination": "/api?postId=:postId"
+    },
+    {
+      "source": "/api/:postId.jpg",
+      "destination": "/api?postId=:postId"
+    },
+    {
+      "source": "/api/:postId.gif",
+      "destination": "/api?postId=:postId"
+    }
   ]
 }

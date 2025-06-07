@@ -25,6 +25,7 @@ export default async function handler(req, res) {
 
     const postJson = await postData.json();
     const postInfo = postJson?.post;
+    const fileExt = postInfo.file.ext;
 
     if (!postInfo || !postInfo.file?.url) {
       return res.status(404).json({ error: "Media URL not found in post data" });
@@ -37,7 +38,6 @@ export default async function handler(req, res) {
     });
 
     if (embed === "true") {
-      const fileExt = postInfo.file.ext;
       const previewUrl = postInfo.preview?.url;
       const postUrl = `https://${host}/api?postId=${postId}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
@@ -117,7 +117,8 @@ export default async function handler(req, res) {
     const arrayBuffer = await imageResponse.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     const contentType = imageResponse.headers.get("content-type") || 'image/jpeg';
-
+    res.setHeader("Content-Disposition", `inline; filename="e179.${fileExt}"`);
+    res.setHeader("Cache-Control", "public, max-age=86400");
     res.setHeader("Content-Type", contentType);
     res.setHeader("Access-Control-Allow-Origin", "*");
 
