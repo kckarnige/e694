@@ -43,9 +43,9 @@ export default async function handler(req, res) {
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
-      var authorNum = postInfo.tags.artist.length + postInfo.tags.contributor.length;
-      if (postInfo.tags.artist.includes("sound_warning")) {authorNum--}
-      if (postInfo.tags.artist.includes("third-party_edit")) {authorNum--}
+      var authors = postInfo.tags.artist.concat(postInfo.tags.contributor);
+      var exclude = ["sound_warning", "third-party_edit"];
+      var realAuthors = authors.filter(real => !exclude.includes(real));
 
       if (postInfo.tags.artist.includes("sound_warning")
         || postInfo.tags.meta.includes("sound")
@@ -54,9 +54,9 @@ export default async function handler(req, res) {
       }
 
       if (authorNum == 1) {
-        postAuthor = `${postInfo.tags.artist[0]}`
+        postAuthor = `${realAuthors[0]}`
       } else {
-        postAuthor = `${postInfo.tags.artist[0]} +${authorNum - 1}`
+        postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
       }
       const embedHtml = `
         <!DOCTYPE html>
