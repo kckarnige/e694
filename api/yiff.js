@@ -53,7 +53,7 @@ export default async function handler(req, res) {
         sndWarn = `<meta property="og:description" content="🔊 Sound Warning! 🔊" />`
       }
 
-      if (authorNum == 1) {
+      if (realAuthors == 1) {
         postAuthor = `${realAuthors[0]}`
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
