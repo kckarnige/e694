@@ -43,7 +43,7 @@ export default async function handler(req, res) {
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
-      var authorNum = postInfo.tags.artist.length;
+      var authorNum = postInfo.tags.artist.length + postInfo.tags.contributor.length;
       if (postInfo.tags.artist.includes("sound_warning")) {
         sndWarn = `<meta property="og:description" content="🔊 Sound Warning! 🔊" />`
         authorNum--
