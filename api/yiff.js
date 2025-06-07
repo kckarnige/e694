@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       var postAuthor;
       var sndWarn = "";
       var authors = (postInfo.tags.artist ?? []).concat(postInfo.tags.contributor ?? []);
-      var exclude = ["sound_warning", "third-party_edit"];
+      var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
       var realAuthors = authors.filter(real => !exclude.includes(real));
 
       if (postInfo.tags.artist.includes("sound_warning")

@@ -2,7 +2,7 @@
 
 >*(A-Z/1-9) API -> 179*
 
-For anyone who wants to use an image from the e621 CDN without any issues. Easy to use and works with no issues!
+For anyone who wants to use an image from the e621 CDN without any issues. Works just like official means, just a little more flexible and a bit cleaner!
 
 ----
 
