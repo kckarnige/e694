@@ -83,20 +83,22 @@ export default async function handler(req, res) {
           <meta property="og:site_name" content="Video from ${baseDomain} • e179 (${host})">
           ` : `
             <meta property="og:image" content="${postUrl}" />
-          <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
+            <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
           `}
 
           <!-- Twitter -->
           <meta name="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
           <meta name="twitter:title" content="Post from ${baseDomain}" />
-          <meta name="twitter:image" content="${previewUrl}" />
           ${isVideo ? `
+            <meta name="twitter:image" content="${previewUrl}" />
             <meta name="twitter:player" content="${postUrl}" />
             <meta name="twitter:player:width" content="1280" />
             <meta name="twitter:player:height" content="720" />
             <meta name="twitter:player:stream" content="${postUrl}" />
             <meta name="twitter:player:stream:content_type" content="video/${fileExt}" />
-          ` : ''}
+          ` : `
+            <meta name="twitter:image" content="${postUrl}" />
+          `}
         </head>
         <body>
             <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
@@ -114,7 +116,7 @@ export default async function handler(req, res) {
 
     const arrayBuffer = await imageResponse.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const contentType = imageResponse.headers.get("content-type") || `image/${postInfo.file.ext}`;
+    const contentType = imageResponse.headers.get("content-type") || "image/jpeg";
 
     res.setHeader("Content-Type", contentType);
     res.setHeader("Access-Control-Allow-Origin", "*");
