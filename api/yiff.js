@@ -49,7 +49,7 @@ export default async function handler(req, res) {
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
-      var authors = (postInfo.tags.artist ?? []).concat(postInfo.tags.contributor ?? []);
+      var authors = host.includes("e926") ? (postInfo.tags.artist ?? []) : ((postInfo.tags.artist ?? []).concat(postInfo.tags.contributor ?? []));
       var exclude = ["sound_warning", "third-party_edit"];
       var realAuthors = authors.filter(real => !exclude.includes(real));
 
