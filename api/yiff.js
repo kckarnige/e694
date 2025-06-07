@@ -45,7 +45,7 @@ export default async function handler(req, res) {
 
     if (embed === "true") {
       const previewUrl = postInfo.preview?.url;
-      const postUrl = `https://${host}/api/${postId}.${fileExt}`;
+      const postUrl = `https://${host}/${postId}.${fileExt}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
