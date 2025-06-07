@@ -62,16 +62,19 @@ export default async function handler(req, res) {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta name="theme-color" content="#00549e" />
+          <link rel="icon" href="/favicon.ico" />
+          <link rel="apple-touch-icon" href="/favicon.png" />
           <meta property="title" content="#${postId}" />
+          
 
           <!-- Open Graph -->
-          <meta property="og:title" content="#${postId}" />
-          <meta property="og:description" content="${sndWarn}
-          
-          
-          By ${postAuthor}" />
+          <meta property="og:title" content="#${postId} By ${postAuthor}" />
+          <meta property="article:published_time" content="${postInfo.created_at}" />
+          <meta property="article:modified_time" content="${postInfo.updated_at}" />
+          <meta property="og:description" content="${sndWarn}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
-          <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
+          <meta property="og:site_name" content="e179 (${host})">
+          
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
