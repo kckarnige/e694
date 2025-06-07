@@ -27,7 +27,7 @@ export default async function handler(req, res) {
     const postInfo = postJson?.post;
 
     if (!postInfo || !postInfo.file?.url) {
-      return res.status(404).json({ error: "Image URL not found in post data" });
+      return res.status(404).json({ error: "Media URL not found in post data" });
     }
 
     const imageResponse = await fetch(postInfo.file.url, {
@@ -42,10 +42,10 @@ export default async function handler(req, res) {
       const postUrl = `https://${host}/api?postId=${postId}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
-      var sndWarn;
+      var sndWarn = "";
       var authorNum = postInfo.tags.artist.length;
       if (postInfo.tags.artist.includes("sound_warning")) {
-        sndWarn = "🔊 Sound Warning! 🔊"
+        sndWarn = `<meta property="og:description" content="🔊 Sound Warning! 🔊" />`
         authorNum--
       }
       if (postInfo.tags.artist.includes("third-party_edit")) {authorNum--}
@@ -69,17 +69,18 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
-          <meta property="og:description" content="${sndWarn}" />
+          ${sndWarn}
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
-          <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
+          <meta property="og:site_name" content="Video from ${baseDomain} • e179 (${host})">
           ` : `
             <meta property="og:image" content="${postUrl}" />
+          <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
           `}
 
           <!-- Twitter -->
