@@ -116,7 +116,7 @@ export default async function handler(req, res) {
 
     const arrayBuffer = await imageResponse.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const contentType = imageResponse.headers.get("content-type") || "image/jpeg";
+    const contentType = imageResponse.headers.get("content-type") || `image/${postInfo.file.ext}`;
 
     res.setHeader("Content-Type", contentType);
     res.setHeader("Access-Control-Allow-Origin", "*");
