@@ -109,7 +109,7 @@ export default async function handler(req, res) {
           `}
         </head>
         <body>
-            
+            <script>console.log(${realAuthors}</script>
         </body>
         </html>
       `.trim();
