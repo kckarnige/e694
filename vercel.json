@@ -2,8 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "src": "/api",
-      "dest": "/api/yiff.js"
+      "source": "/api",
+      "destination": "/api/yiff.js"
     },
     {
       "source": "/api/:postId.:ext",
