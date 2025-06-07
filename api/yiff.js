@@ -34,7 +34,7 @@ export default async function handler(req, res) {
     const fileExt = ext ?? postInfo.file.ext;
 
     if (ext === "json") {
-      return res.status(200).json(postData);
+      return res.status(200).json(postJson);
     }
 
     if (!postInfo || !postInfo.file?.url) {
