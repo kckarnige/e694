@@ -1,11 +1,17 @@
 export default async function handler(req, res) {
   const {
-    postId,
+    slug,
     embed = false
   } = req.query;
 
-  if (!postId) {
-    return res.status(400).json({ error: "Post ID not specified!" });
+  if (!slug || !slug.includes('.')) {
+    return res.status(400).json({ error: "Invalid or missing post ID and extension" });
+  }
+
+  const [postId, ext] = slug.split('.');
+
+  if (!/^\d+$/.test(postId)) {
+    return res.status(400).json({ error: "Invalid post ID" });
   }
 
   const host = req.headers.host || "";
@@ -25,7 +31,7 @@ export default async function handler(req, res) {
 
     const postJson = await postData.json();
     const postInfo = postJson?.post;
-    const fileExt = postInfo.file.ext;
+    const fileExt = ext;
 
     if (!postInfo || !postInfo.file?.url) {
       return res.status(404).json({ error: "Media URL not found in post data" });

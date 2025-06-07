@@ -2,12 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api",
-      "destination": "/api/yiff.js"
-    },
-    {
-      "source": "/api/:postId.:ext",
-      "destination": "/api?postId=:postId"
+      "source": "/api/:slug",
+      "destination": "/api/yiff.js?slug=:slug"
     }
   ]
 }
