@@ -1,14 +1,12 @@
 {
   "version": 2,
-  "routes": [
+  "rewrites": [
     {
       "src": "/api",
       "dest": "/api/yiff.js"
-    }
-  ],
-  "rewrites": [
+    },
     {
-      "source": "/api/:postId",
+      "source": "/api/:postId.:ext",
       "destination": "/api?postId=:postId"
     }
   ]
