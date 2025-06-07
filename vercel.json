@@ -8,7 +8,15 @@
   ],
   "rewrites": [
     {
-      "source": "/api/:postId.*",
+      "source": "/api/:postId.gif",
+      "destination": "/api?postId=:postId"
+    },
+    {
+      "source": "/api/:postId.jpg",
+      "destination": "/api?postId=:postId"
+    },
+    {
+      "source": "/api/:postId.png",
       "destination": "/api?postId=:postId"
     }
   ]
