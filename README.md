@@ -19,16 +19,14 @@ For anyone who wants to use an image from the e621 cdn without any issue.
 
 ### Image Example:
 
-`https://e926-media.vercel.app/2146729.gif`
+`https://e926-media.vercel.app/5302549.gif`
 
-[![example](https://e926-media.vercel.app/2146729.gif)](https://e621-media.vercel.app/2146729.gif)
+[![example](https://e926-media.vercel.app/5302549.gif)](https://e926-media.vercel.app/5302549.gif)
 
 ### Embed Example:
 
-`https://e926-media.vercel.app/2146729.gif?embed=true`
-
-![embed example](https://e926-media.vercel.app/embed_example.png)   
+`https://e926-media.vercel.app/5302549.gif?embed=true`  
 or  
-`https://e926-media.vercel.app/posts/2146729`
+`https://e926-media.vercel.app/posts/5302549`
 
-![embed example](https://e926-media.vercel.app/embed_example_alt.png)
+![embed example](https://e926-media.vercel.app/embed_example.png)

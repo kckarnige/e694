@@ -61,8 +61,10 @@ export default async function handler(req, res) {
 
       if (realAuthors.length == 1) {
         postAuthor = `${realAuthors[0]}`
+        console.log(realAuthors)
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
+        console.log(realAuthors)
       }
       const embedHtml = `
         <!DOCTYPE html>
@@ -107,7 +109,7 @@ export default async function handler(req, res) {
           `}
         </head>
         <body>
-            <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
+            
         </body>
         </html>
       `.trim();
