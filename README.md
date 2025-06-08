@@ -15,9 +15,6 @@ Pros:
 - Embed accounts for contributors, even for e926.
 - Media size in embeds are consistent, meaning pixel art can be seen in embeds just like a 4K image.
 
-Cons: 
-- *I'm broke and can't pay for a domain that'll make it super easy to just change one letter and have it work seemlessly like fxtwitter, for now.*
-
 ----
 
 ### Available Domains:
