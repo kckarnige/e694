@@ -78,14 +78,14 @@ export default async function handler(req, res) {
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/favicon.png" />
           <meta property="title" content="#${postId}" />
-          <meta property="al:android:app_name" content="Medium"/>,
-          <meta property="article:published_time" content="${postInfo.created_at}"/>,
+          <meta property="al:android:app_name" content="Medium"/>
+          <meta property="article:published_time" content="${postInfo.created_at}"/>
           
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
           ${sndWarn}
-          <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
+          <meta property="og:type" content="article" />
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
@@ -113,6 +113,11 @@ export default async function handler(req, res) {
           `}
         </head>
         <body>
+            <article>
+                <h1>My Custom Article</h1>
+                <p>Here's some paragraph text...</p>
+                <footer>Written by Me - June 7, 2025</footer>
+            </article>
             <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
         </body>
         </html>
