@@ -74,7 +74,7 @@ export default async function handler(req, res) {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta name="theme-color" content="#00709e" />
+          <meta property="theme-color" content="#00709e" />
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/favicon.png" />
           <meta property="title" content="#${postId}" />
@@ -97,17 +97,17 @@ export default async function handler(req, res) {
           `}
 
           <!-- Twitter -->
-          <meta name="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
-          <meta name="twitter:title" content="Post from ${baseDomain}" />
+          <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
+          <meta property="twitter:title" content="Post from ${baseDomain}" />
           ${isVideo ? `
-            <meta name="twitter:image" content="${previewUrl}" />
-            <meta name="twitter:player" content="${postUrl}" />
-            <meta name="twitter:player:width" content="1280" />
-            <meta name="twitter:player:height" content="720" />
-            <meta name="twitter:player:stream" content="${postUrl}" />
-            <meta name="twitter:player:stream:content_type" content="video/${fileExt}" />
+            <meta property="twitter:image" content="${previewUrl}" />
+            <meta property="twitter:player" content="${postUrl}" />
+            <meta property="twitter:player:width" content="1280" />
+            <meta property="twitter:player:height" content="720" />
+            <meta property="twitter:player:stream" content="${postUrl}" />
+            <meta property="twitter:player:stream:content_type" content="video/${fileExt}" />
           ` : `
-            <meta name="twitter:image" content="${postUrl}" />
+            <meta property="twitter:image" content="${postUrl}" />
           `}
         </head>
         <body>
