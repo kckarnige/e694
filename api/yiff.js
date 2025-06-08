@@ -64,10 +64,10 @@ export default async function handler(req, res) {
       var postAuthor;
       var sndWarn = "";
       var authors;
-      if (baseDomain === "e621.net") {
-        authors = (postInfo.tags.artist ?? []).concat(postInfo.tags.contributor ?? []);
+      if (baseDomain === "e926.net") {
+        authors = postInfo.tags.artist;
       } else {
-        authors = (postInfo.tags.artist ?? []);
+        authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
       }
       var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
       var realAuthors = authors.filter(real => !exclude.includes(real));
