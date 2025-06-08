@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   try {
     const postData = await fetch(postDataUrl, {
       headers: {
-        "User-Agent": "e694/1.0"
+        "User-Agent": "e694/1.1"
       }
     });
 
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
     const imageResponse = await fetch(postInfo.file.url, {
       headers: {
-        "User-Agent": "e694/1.0 (e621 Proxy)"
+        "User-Agent": "e694/1.1"
       }
     });
 
