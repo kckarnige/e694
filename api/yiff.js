@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
   const host = req.headers.host || "";
   const baseDomain = (host.includes("e926")||host.includes("safe")) ? "e926.net" : "e621.net";
-  const postDataUrl = `https://e621.net/posts/${postId}.json`;
+  const postDataUrl = `https://${baseDomain}/posts/${postId}.json`;
 
   try {
     const postData = await fetch(postDataUrl, {
@@ -63,7 +63,12 @@ export default async function handler(req, res) {
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
-      var authors = (postInfo.tags.artist ?? []).concat(postInfo.tags.contributor ?? []);
+      var authors;
+      if (baseDomain === "e621.net") {
+        authors = (postInfo.tags.artist ?? []).concat(postInfo.tags.contributor ?? []);
+      } else {
+        authors = (postInfo.tags.artist ?? []);
+      }
       var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
       var realAuthors = authors.filter(real => !exclude.includes(real));
 
