@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
 
   const host = req.headers.host || "";
-  const baseDomain = (host.includes("e926")||host.includes("safe")) ? "e926.net" : "e621.net";
+  const baseDomain = (host.includes("e926") || host.includes("safe")) ? "e926.net" : "e621.net";
   const postDataUrl = `https://${baseDomain}/posts/${postId}.json`;
 
   try {
@@ -73,7 +73,13 @@ export default async function handler(req, res) {
         sndWarn = "\n\n🔊 Sound Warning! 🔊"
       }
 
-      if ((realAuthors.length === 1) || (baseDomain === "e926.net")) {
+      if (baseDomain === "e926.net") {
+        // For some posts, artists aren't under the "artist" field in JSON for some reason
+        if (postId.includes([5423459, 5423465])) {
+          postAuthor = `milkislla2`
+        }
+      }
+      else if (realAuthors.length === 1) {
         postAuthor = `${realAuthors[0]}`
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
