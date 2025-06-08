@@ -8,8 +8,7 @@ For anyone who wants to send someone an e621 post. Works just like official mean
 
 ### Why should I use this?
 
-Pros:
-- No restrictions in who or what can fetch the content.
+- No restrictions on who or what can fetch the content.
 - Media URLs are shorter and straight-forwards.
 - Works just about the same as official e6.
 - Embed accounts for contributors, even for e926.
