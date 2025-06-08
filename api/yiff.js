@@ -78,6 +78,8 @@ export default async function handler(req, res) {
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/favicon.png" />
           <meta property="title" content="#${postId}" />
+          <meta property="al:android:app_name" content="Medium"/>,
+          <meta property="article:published_time" content="${postInfo.created_at}"/>,
           
 
           <!-- Open Graph -->
