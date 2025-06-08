@@ -63,12 +63,7 @@ export default async function handler(req, res) {
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
-      var authors;
-      if (baseDomain === "e926.net") {
-        authors = postInfo.tags.artist;
-      } else {
-        authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
-      }
+      var authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
       var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
       var realAuthors = authors.filter(real => !exclude.includes(real));
 
@@ -78,7 +73,7 @@ export default async function handler(req, res) {
         sndWarn = "\n\n🔊 Sound Warning! 🔊"
       }
 
-      if (realAuthors.length == 1) {
+      if ((realAuthors.length === 1) || (baseDomain === "e926.net")) {
         postAuthor = `${realAuthors[0]}`
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
