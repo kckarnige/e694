@@ -33,18 +33,22 @@ For anyone who wants to send someone an e621 post. Works just like official mean
 
 ----
 
-### Available Domains:
+## Available Domains:
+
+### Safe-Rated Content:
 
 - e694.net
-- safe.e694.net
-- e621.e694.net
-- e926.e694.net
 - e694.kckarnige.online
 - e694.vercel.app
-- e621.kckarnige.online
-- e621-media.vercel.app
 - e926.kckarnige.online
 - e926-media.vercel.app
+
+### Other Content
+
+- e.e694.net
+- e621.e694.net
+- e621.kckarnige.online
+- e621-media.vercel.app
 
 ## Examples:
 

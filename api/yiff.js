@@ -13,15 +13,25 @@ export default async function handler(req, res) {
   if (!/^\d+$/.test(postId)) {
     return res.status(400).json({ error: "Invalid post ID" });
   }
+  const postDataUrl = `https://e621.net/posts/${postId}.json`;
 
   const host = req.headers.host || "";
-  const baseDomain = (host.includes("e926") || host.includes("safe")) ? "e926.net" : "e621.net";
-  const postDataUrl = `https://e621.net/posts/${postId}.json`;
+  var baseDomain;
+  if (
+    host == "e.e694.net" ||
+    host == "e621.e694.net" ||
+    host == "e621.kckarnige.online" ||
+    host == "e621-media.vercel.app"
+  ) {
+    baseDomain = "e621.net";
+  } else {
+    baseDomain = "e926.net";
+  }
 
   try {
     const postData = await fetch(postDataUrl, {
       headers: {
-        "User-Agent": "e694/1.1"
+        "User-Agent": "e694/1.2"
       }
     });
 
@@ -53,7 +63,7 @@ export default async function handler(req, res) {
 
     const imageResponse = await fetch(postInfo.file.url, {
       headers: {
-        "User-Agent": "e694/1.1"
+        "User-Agent": "e694/1.2"
       }
     });
 
