@@ -1,4 +1,24 @@
-![e719](./icon.svg)
+<img  align="left" alt="e694" src="./icon.svg">
+
+<p align="right">
+  <i>If you'd like to support what I do, please consider donating, it'd help a lot, and it'd help keep "e694.net" up!</i>
+  <br><br>
+  <a href="https://www.buymeacoffee.com/kckarnige" target="_blank">
+    <img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg">
+  </a>
+  <br>
+  <a href="https://github.com/sponsors/kckarnige" target="_blank">
+    <img alt="ghsponsors-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/ghsponsors-singular_vector.svg">
+  </a>
+  <br>
+  <a href="https://ko-fi.com/kckarnige" target="_blank">
+    <img alt="kofi-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/kofi-singular_vector.svg">
+  </a>
+  <br>
+  <i>I also take <a href="https://cash.app/$kckarnige">CashApp</a> (Yes, I am that broke)</i>
+</p>
+
+<br>
 
 >*(A-Z/1-9) FIX -> 694*
 
