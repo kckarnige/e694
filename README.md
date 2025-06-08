@@ -1,7 +1,6 @@
 <img  align="left" alt="e694" src="./icon.svg">
 
 <p align="right">
-  <br>
   <i>If you'd like to support what I do, please consider donating, it'd help a lot, and it'd help keep "e694.net" up!</i>
   <br><br>
   <a href="https://www.buymeacoffee.com/kckarnige" target="_blank">
