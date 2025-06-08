@@ -71,57 +71,52 @@ export default async function handler(req, res) {
 
     if (embed === "true") {
       const embedHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta property="theme-color" content="#00709e" />
-          <link rel="icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" href="/favicon.png" />
-          <meta property="title" content="#${escapedPostId}" />
-          <meta property="al:android:app_name" content="Medium"/>
-          <meta property="article:published_time" content="${escapeHtml(postInfo.created_at)}"/>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-          <!-- Open Graph -->
-          <meta property="og:title" content="#${escapedPostId} by ${postAuthor}" />
-          ${sndWarn}
-          <meta property="og:type" content="article" />
-          ${isVideo ? `
-            <meta property="og:video" content="${escapedMedia}" />
-            <meta property="og:video:type" content="video/${fileExt}" />
-            <meta property="og:video:width" content="1280" />
-            <meta property="og:video:height" content="720" />
-            <meta property="og:image" content="${escapedPreview}" />
-            <meta property="og:site_name" content="Video from ${escapedBaseDomain} • e179 (${escapedHost})">
-          ` : `
-            <meta property="og:image" content="${escapedMedia}" />
-            <meta property="og:site_name" content="Image from ${escapedBaseDomain} • e179 (${escapedHost})">
-          `}
+  <!-- Theme & Icons -->
+  <meta name="theme-color" content="#00709e" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
 
-          <!-- Twitter -->
-          <meta name="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
-          <meta name="twitter:title" content="Post from ${escapedBaseDomain}" />
-          ${isVideo ? `
-            <meta name="twitter:image" content="${escapedPreview}" />
-            <meta name="twitter:player" content="${escapedMedia}" />
-            <meta name="twitter:player:width" content="1280" />
-            <meta name="twitter:player:height" content="720" />
-            <meta name="twitter:player:stream" content="${escapedMedia}" />
-            <meta name="twitter:player:stream:content_type" content="video/${fileExt}" />
-          ` : `
-            <meta name="twitter:image" content="${escapedMedia}" />
-          `}
-          <noscript><meta http-equiv="refresh" content="0;url=https://${escapedBaseDomain}/posts/${escapedPostId}" /></noscript>
-        </head>
-        <body>
-            <article>
-                <h1>Post #${escapedPostId}</h1>
-                <p>Shared from ${escapedBaseDomain}</p>
-                <footer>by ${postAuthor}</footer>
-            </article>
-        </body>
-        </html>
+  <!-- Article Metadata -->
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="#123456 by artist_name" />
+  <meta property="og:description" content="Posted on June 7, 2025 • Score: 243 • Rating: SFW" />
+  <meta property="og:image" content="${escapedMedia}" />
+  <meta property="og:url" content="${escapedMedia}" />
+  <meta property="article:published_time" content="2025-06-07T12:00:00Z" />
+  <meta property="article:author" content="artist_name" />
+  <meta property="og:site_name" content="Image from e621.net • e179" />
+
+  <!-- Twitter Metadata -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="#123456 by artist_name" />
+  <meta name="twitter:description" content="Posted on June 7, 2025 • Score: 243 • Rating: SFW" />
+  <meta name="twitter:image" content="${escapedMedia}" />
+
+  <title>#123456 by artist_name</title>
+</head>
+<body>
+  <article>
+    <h1>#123456 by artist_name</h1>
+    <p>This is a custom embed page with additional information about the post.</p>
+    <p>Posted: June 7, 2025</p>
+    <p>Rating: SFW</p>
+    <p>Score: 243</p>
+    <footer>From <a href="https://e621.net/posts/123456">e621.net</a> • Proxy by e179</footer>
+  </article>
+
+  <!-- Optional auto-redirect -->
+  <script>
+    window.location.href = "https://e621.net/posts/123456";
+  </script>
+</body>
+</html>
+
       `.trim();
 
       res.setHeader("Content-Type", "text/html");
