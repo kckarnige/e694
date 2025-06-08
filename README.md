@@ -1,6 +1,6 @@
 ![e719](./icon.svg)
 
->*(A-Z/1-9) API -> 179*
+>*(A-Z/1-9) FIX -> 694*
 
 For anyone who wants to send someone an e621 post. Works just like official means, just more consistent and flexible! No restrictions, and URLs can end with filenames!
 
@@ -22,12 +22,13 @@ Cons:
 
 ### Available Domains:
 
+- e694.net
+- e694.kckarnige.online
+- e694.vercel.app
 - e621.kckarnige.online
-- e926.kckarnige.online
-- e179.kckarnige.online
 - e621-media.vercel.app
+- e926.kckarnige.online
 - e926-media.vercel.app
-- e179.vercel.app
 
 ## Examples:
 

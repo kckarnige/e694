@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   try {
     const postData = await fetch(postDataUrl, {
       headers: {
-        "User-Agent": "e179/1.0"
+        "User-Agent": "e694/1.0"
       }
     });
 
@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
     const imageResponse = await fetch(postInfo.file.url, {
       headers: {
-        "User-Agent": "e179/1.0 (e621 Proxy)"
+        "User-Agent": "e694/1.0 (e621 Proxy)"
       }
     });
 
@@ -102,10 +102,10 @@ export default async function handler(req, res) {
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
-            <meta property="og:site_name" content="Video from ${baseDomain} • e179">
+            <meta property="og:site_name" content="Video from ${baseDomain} • e694">
           ` : `
             <meta property="og:image" content="${postUrl}" />
-            <meta property="og:site_name" content="Image from ${baseDomain} • e179">
+            <meta property="og:site_name" content="Image from ${baseDomain} • e694">
           `}
 
           <!-- Twitter -->
