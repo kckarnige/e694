@@ -89,7 +89,7 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
-          <meta property="og:description" content="Posted on ${formattedDate} • Score: ${postInfo.score.total} • Rating: ${(postInfo.rating+"").toUpperCase}" />
+          <meta property="og:description" content='"${postInfo}"\nPosted on ${formattedDate}\nScore: ${postInfo.score.total} • Rating: ${postInfo.rating} • ' />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
           <!-- Twitter -->
           <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
           <meta property="twitter:title" content="Post from ${baseDomain}" />
-          <meta property="twitter:description" content="Posted on ${formattedDate} • Score: ${postInfo.score.total} • Rating: ${(postInfo.rating+"").toUpperCase}" />
+          <meta property="twitter:description" content='"${postInfo}"' />
           ${isVideo ? `
             <meta property="twitter:image" content="${previewUrl}" />
             <meta property="twitter:player" content="${postUrl}" />
