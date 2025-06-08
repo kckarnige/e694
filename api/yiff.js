@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   }
 
   const host = req.headers.host || "";
-  const baseDomain = host.includes("e926") ? "e926.net" : "e621.net";
+  const baseDomain = (host.includes("e926")||host.includes("safe")) ? "e926.net" : "e621.net";
   const postDataUrl = `https://e621.net/posts/${postId}.json`;
 
   try {
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
           <link rel="icon" href="/favicon.ico" />
           <link rel="apple-touch-icon" href="/favicon.png" />
           <meta property="title" content="#${postId}" />
-          
+
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
           <meta property="og:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}" />
