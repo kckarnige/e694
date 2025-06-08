@@ -124,7 +124,8 @@ export default async function handler(req, res) {
     <figure><img src="${isVideo ? previewUrl : postUrl}" alt="Preview" style="max-width: 100%; height: auto;"></figure>
     <footer>By ${postAuthor} — ${formattedDate}</footer>
   </article>
-  <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
+  <noscript><meta http-equiv="refresh" content="0;url=https://${baseDomain}/posts/${postId}" /></noscript>
+  <p>If you are not redirected, <a href="https://${baseDomain}/posts/${postId}">click here</a>.</p>
 </body>
 </html>
 `.trim();
