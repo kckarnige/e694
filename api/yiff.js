@@ -32,6 +32,16 @@ export default async function handler(req, res) {
     const postJson = await postData.json();
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
+    const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    const ratingMap = {
+      s: "Safe",
+      q: "Questionable",
+      e: "Explicit"
+    };
 
     if (ext === "json") {
       return res.status(200).json(postJson);
@@ -60,7 +70,7 @@ export default async function handler(req, res) {
       if (postInfo.tags.artist.includes("sound_warning")
         || postInfo.tags.meta.includes("sound")
         && !postInfo.tags.meta.includes("no_sound")) {
-        sndWarn = `<meta property="og:description" content="🔊 Sound Warning! 🔊" />`
+        sndWarn = "\n\n🔊 Sound Warning! 🔊"
       }
 
       if (realAuthors.length == 1) {
@@ -84,7 +94,7 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
-          ${sndWarn}
+          <meta property="og:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
@@ -92,15 +102,16 @@ export default async function handler(req, res) {
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
-            <meta property="og:site_name" content="Video from ${baseDomain} • e179 (${host})">
+            <meta property="og:site_name" content="Video from ${baseDomain} • e179">
           ` : `
             <meta property="og:image" content="${postUrl}" />
-            <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
+            <meta property="og:site_name" content="Image from ${baseDomain} • e179">
           `}
 
           <!-- Twitter -->
           <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
           <meta property="twitter:title" content="Post from ${baseDomain}" />
+          <meta property="twitter:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}" />
           ${isVideo ? `
             <meta property="twitter:image" content="${previewUrl}" />
             <meta property="twitter:player" content="${postUrl}" />
@@ -130,7 +141,6 @@ export default async function handler(req, res) {
     const buffer = Buffer.from(arrayBuffer);
     const contentType = imageResponse.headers.get("content-type") || 'image/jpeg';
     res.setHeader("Content-Disposition", `inline; filename="${postId}.${fileExt}"`);
-    res.setHeader("Cache-Control", "public, max-age=86400");
     res.setHeader("Content-Type", contentType);
     res.setHeader("Access-Control-Allow-Origin", "*");
 
