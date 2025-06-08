@@ -16,7 +16,7 @@ export default async function handler(req, res) {
 
   const host = req.headers.host || "";
   const baseDomain = (host.includes("e926") || host.includes("safe")) ? "e926.net" : "e621.net";
-  const postDataUrl = `https://${baseDomain}/posts/${postId}.json`;
+  const postDataUrl = `https://e621.net/posts/${postId}.json`;
 
   try {
     const postData = await fetch(postDataUrl, {
@@ -59,7 +59,7 @@ export default async function handler(req, res) {
 
     if (embed === "true") {
       const previewUrl = postInfo.preview?.url;
-      const postUrl = `https://${host}/${postId}.${fileExt}`;
+      const postUrl = ((host.includes("e926") || host.includes("safe")) && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";
@@ -73,13 +73,7 @@ export default async function handler(req, res) {
         sndWarn = "\n\n🔊 Sound Warning! 🔊"
       }
 
-      if (baseDomain === "e926.net") {
-        // For some posts, artists aren't under the "artist" field in JSON for some reason
-        if (postId.includes([5423459, 5423465])) {
-          postAuthor = `milkislla2`
-        }
-      }
-      else if (realAuthors.length === 1) {
+      if (realAuthors.length === 1) {
         postAuthor = `${realAuthors[0]}`
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
