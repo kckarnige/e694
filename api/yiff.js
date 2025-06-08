@@ -68,60 +68,67 @@ export default async function handler(req, res) {
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
       }
+
+      const formattedDate = new Date(postInfo.created_at).toLocaleString("en-US", {
+        dateStyle: "long",
+        timeStyle: "short"
+      });
+
       const embedHtml = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta property="theme-color" content="#00709e" />
-          <link rel="icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" href="/favicon.png" />
-          <meta property="title" content="#${postId}" />
-          <meta property="al:android:app_name" content="Medium"/>
-          <meta property="article:published_time" content="${postInfo.created_at}"/>
-          
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta property="theme-color" content="#00709e" />
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
+  <meta property="title" content="#${postId}" />
+  <meta property="al:android:app_name" content="Medium"/>
+  <meta property="article:published_time" content="${postInfo.created_at}"/>
 
-          <!-- Open Graph -->
-          <meta property="og:title" content="#${postId} by ${postAuthor}" />
-          ${sndWarn}
-          <meta property="og:type" content="article" />
-          ${isVideo ? `
-            <meta property="og:video" content="${postUrl}" />
-            <meta property="og:video:type" content="video/${fileExt}" />
-            <meta property="og:video:width" content="1280" />
-            <meta property="og:video:height" content="720" />
-            <meta property="og:image" content="${previewUrl}" />
-            <meta property="og:site_name" content="Video from ${baseDomain} • e179 (${host})">
-          ` : `
-            <meta property="og:image" content="${postUrl}" />
-            <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
-          `}
+  <!-- Open Graph -->
+  <meta property="og:title" content="#${postId} by ${postAuthor}" />
+  ${sndWarn}
+  <meta property="og:type" content="article" />
+  ${isVideo ? `
+    <meta property="og:video" content="${postUrl}" />
+    <meta property="og:video:type" content="video/${fileExt}" />
+    <meta property="og:video:width" content="1280" />
+    <meta property="og:video:height" content="720" />
+    <meta property="og:image" content="${previewUrl}" />
+    <meta property="og:site_name" content="Video from ${baseDomain} • e179 (${host})">
+  ` : `
+    <meta property="og:image" content="${postUrl}" />
+    <meta property="og:site_name" content="Image from ${baseDomain} • e179 (${host})">
+  `}
 
-          <!-- Twitter -->
-          <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
-          <meta property="twitter:title" content="Post from ${baseDomain}" />
-          ${isVideo ? `
-            <meta property="twitter:image" content="${previewUrl}" />
-            <meta property="twitter:player" content="${postUrl}" />
-            <meta property="twitter:player:width" content="1280" />
-            <meta property="twitter:player:height" content="720" />
-            <meta property="twitter:player:stream" content="${postUrl}" />
-            <meta property="twitter:player:stream:content_type" content="video/${fileExt}" />
-          ` : `
-            <meta property="twitter:image" content="${postUrl}" />
-          `}
-        </head>
-        <body>
-            <article>
-                <h1>My Custom Article</h1>
-                <p>Here's some paragraph text...</p>
-                <footer>Written by Me - June 7, 2025</footer>
-            </article>
-            <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
-        </body>
-        </html>
-      `.trim();
+  <!-- Twitter -->
+  <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
+  <meta property="twitter:title" content="Post from ${baseDomain}" />
+  ${isVideo ? `
+    <meta property="twitter:image" content="${previewUrl}" />
+    <meta property="twitter:player" content="${postUrl}" />
+    <meta property="twitter:player:width" content="1280" />
+    <meta property="twitter:player:height" content="720" />
+    <meta property="twitter:player:stream" content="${postUrl}" />
+    <meta property="twitter:player:stream:content_type" content="video/${fileExt}" />
+  ` : `
+    <meta property="twitter:image" content="${postUrl}" />
+  `}
+</head>
+<body>
+  <article>
+    <h1>Post #${postId}</h1>
+    <p>Originally posted on <a href="https://${baseDomain}/posts/${postId}">${baseDomain}</a></p>
+    <figure><img src="${isVideo ? previewUrl : postUrl}" alt="Preview" style="max-width: 100%; height: auto;"></figure>
+    <footer>By ${postAuthor} — ${formattedDate}</footer>
+  </article>
+  <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
+</body>
+</html>
+`.trim();
+
 
       res.setHeader("Content-Type", "text/html");
       return res.status(200).send(embedHtml);
