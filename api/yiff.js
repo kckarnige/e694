@@ -69,7 +69,7 @@ export default async function handler(req, res) {
 
     if (embed === "true") {
       const previewUrl = postInfo.preview?.url;
-      const postUrl = ((host.includes("e926") || host.includes("safe")) && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
+      const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
       var postAuthor;
       var sndWarn = "";

@@ -43,7 +43,7 @@ For anyone who wants to send someone an e621 post. Works just like official mean
 - e926.kckarnige.online
 - e926-media.vercel.app
 
-### Other Content
+### All Content
 
 - e.e694.net
 - e621.e694.net
