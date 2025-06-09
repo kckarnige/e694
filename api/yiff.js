@@ -43,7 +43,7 @@ export default async function handler(req, res) {
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
     const previewUrl = postInfo.preview?.url;
-    const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
+    const postUrl = `https://${host}/${postId}.${fileExt}`;
     const isVideo = ["webm", "mp4"].includes(fileExt);
     var postAuthor;
     var sndWarn = "";
@@ -76,12 +76,6 @@ export default async function handler(req, res) {
     if (!postInfo || !postInfo.file?.url) {
       return res.status(404).json({ error: "Media URL not found in post data" });
     }
-
-    const imageResponse = await fetch(postInfo.file.url, {
-      headers: {
-        "User-Agent": "e694/1.3"
-      }
-    });
 
     const accept = req.headers.accept || "";
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
@@ -151,6 +145,13 @@ export default async function handler(req, res) {
       res.setHeader("Content-Type", "text/html");
       return res.status(200).send(embedHtml);
     }
+
+    const imageResponse = await fetch(
+      ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : postInfo.file.url, {
+      headers: {
+        "User-Agent": "e694/1.3"
+      }
+    });
 
     if (!imageResponse.ok) {
       return res.status(imageResponse.status).json({ error: "Failed to fetch image" });
