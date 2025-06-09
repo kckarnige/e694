@@ -45,24 +45,12 @@ export default async function handler(req, res) {
 
     const accept = req.headers.accept || "";
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
-      const activityJson = {
-        "version": "1.0",
-        "type": "rich",
-        "title": "Example Embed Title",
-        "author_name": "AuthorDisplayName",
-        "author_url": "https://example.com/author/1234",
-        "provider_name": "ExampleProvider",
-        "provider_url": "https://example.com",
-        "cache_age": 3600,
-        "thumbnail_url": "https://example.com/thumbnail.jpg",
-        "thumbnail_width": 1280,
-        "thumbnail_height": 720,
-        "html": "<iframe src=\"https://example.com/embed/abc123\" width=\"600\" height=\"400\" frameborder=\"0\" allowfullscreen></iframe>",
-        "width": 600,
-        "height": 400
-      };
       res.setHeader("Content-Type", "application/json+oembed");
-      return res.status(200).json(activityJson);
+      return res.status(200).json({
+        "title": "blah blah",
+        "type": "rich",
+        "html": "sample text\n[some link](https://google.com)\n[website](https://ourwebsite.com)"
+      });
     }
 
     const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
