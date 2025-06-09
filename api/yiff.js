@@ -44,19 +44,24 @@ export default async function handler(req, res) {
     const fileExt = ext ?? postInfo.file.ext;
 
     const accept = req.headers.accept || "";
-    if (ext === "activity+json" || accept.includes("application/activity+json")) {
+    if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
       const activityJson = {
-        version: "1.0",
-        type: "rich",
-        provider_name: "e694",
-        provider_url: "https://e694.net",
-        title: `Post #${postId}`,
-        author_name: "KiCKTheBucket",
-        author_url: `https://e694.net`,
-        width: 600,
-        height: 400
+        "version": "1.0",
+        "type": "rich",
+        "title": "Example Embed Title",
+        "author_name": "AuthorDisplayName",
+        "author_url": "https://example.com/author/1234",
+        "provider_name": "ExampleProvider",
+        "provider_url": "https://example.com",
+        "cache_age": 3600,
+        "thumbnail_url": "https://example.com/thumbnail.jpg",
+        "thumbnail_width": 1280,
+        "thumbnail_height": 720,
+        "html": "<iframe src=\"https://example.com/embed/abc123\" width=\"600\" height=\"400\" frameborder=\"0\" allowfullscreen></iframe>",
+        "width": 600,
+        "height": 400
       };
-      res.setHeader("Content-Type", "application/activity+json");
+      res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json(activityJson);
     }
 
@@ -117,7 +122,7 @@ export default async function handler(req, res) {
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
-          <link rel="alternate" type="application/activity+json" href="https://${host}/${postId}.activity+json">
+          <link rel="alternate" type="application/json+oembed" href="https://${host}/${postId}.json+oembed">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
