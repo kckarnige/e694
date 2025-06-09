@@ -42,59 +42,52 @@ export default async function handler(req, res) {
     const postJson = await postData.json();
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
+    const previewUrl = postInfo.preview?.url;
+    const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
+    const isVideo = ["webm", "mp4"].includes(fileExt);
+    var postAuthor;
+    var sndWarn = "";
+    var authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
+    var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
+    var realAuthors = authors.filter(real => !exclude.includes(real));
+    
 
     const accept = req.headers.accept || "";
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
       const activityJson = {
         version: "1.0",
         type: "rich",
-        provider_name: "e694",
-        provider_url: "https://e694.net",
-        title: `Post #${postId}`,
-        author_name: "KiCKTheBucket",
-        author_url: `https://e694.net`,
-        width: 600,
-        height: 400
+        url: `https://${baseDomain}/posts/${postId}`,
+        description: `Rating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}`,
+        color: 0x00709e,
+        timestamp: postInfo.created_at,
+        author: {
+          name: isVideo ? `Video from ${baseDomain} • e694` : `Image from ${baseDomain} • e694`,
+          url: `https://${baseDomain}/posts/${postId}`,
+          icon_url: "https://e694.net/favicon.png",
+          proxy_icon_url: "https://e694.net/favicon.png"
+        },
+        image: {
+          url: previewUrl,
+          proxy_url: previewUrl,
+          width: postUrl.width || 1280,
+          height: postUrl.preview?.height || 720,
+          content_type: `image/${fileExt}`,
+          placeholder: "",
+          placeholder_version: 1,
+          flags: 0
+        },
+        footer: {
+          text: `Post #${postId} on ${baseDomain}`,
+          icon_url: "https://e694.net/favicon.png",
+          proxy_icon_url: "https://e694.net/favicon.png"
+        }
       };
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json(activityJson);
     }
 
-    const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-
-    const ratingMap = {
-      s: "Safe",
-      q: "Questionable",
-      e: "Explicit"
-    };
-
-    if (ext === "json") {
-      return res.status(200).json(postJson);
-    }
-
-    if (!postInfo || !postInfo.file?.url) {
-      return res.status(404).json({ error: "Media URL not found in post data" });
-    }
-
-    const imageResponse = await fetch(postInfo.file.url, {
-      headers: {
-        "User-Agent": "e694/1.2"
-      }
-    });
-
     if (embed === "true") {
-      const previewUrl = postInfo.preview?.url;
-      const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
-      const isVideo = ["webm", "mp4"].includes(fileExt);
-      var postAuthor;
-      var sndWarn = "";
-      var authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
-      var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
-      var realAuthors = authors.filter(real => !exclude.includes(real));
 
       if (postInfo.tags.artist.includes("sound_warning")
         || postInfo.tags.meta.includes("sound")
