@@ -1,10 +1,8 @@
 export default async function handler(req, res) {
   const {
     slug,
-    embed = false,
-    format = null
+    embed = false
   } = req.query;
-  const acceptHeader = req.headers.accept || "";
 
   if (!slug) {
     return res.status(400).json({ error: "Invalid or missing post ID and extension" });
@@ -70,36 +68,6 @@ export default async function handler(req, res) {
       }
     });
 
-
-    const isOembedRequest = format === "json" || acceptHeader.includes("application/json+oembed");
-    if (isOembedRequest) {
-      const postUrl = `https://${host}/posts/${postId}`;
-      return res.status(200).json(
-        {
-          type: "rich",
-          url: postUrl,
-          description: "Random fun fact\\: Minecraft Bedrock has a feature where you can set a screenshot as your ingame profile banner\\. You can edit your existing screenshots or add your own from scratch as long as it's in jpeg format and has a valid json file to match with it\\.\n\nThe result\\:",
-          color: "00709e",
-          timestamp: formattedDate,
-          author: {
-            name: "KiCKTheBucket (@kckarnige.online)",
-            url: postUrl,
-            icon_url: "https://cdn.bsky.app/img/avatar/plain/did:plc:2hkkpfrodwapb4whfvqtbf4b/bafkreigst6n4wnjd75mjexzdvn6oaub3wivsswrvcgnysllxdqefqkatzi@jpeg"
-          },
-          image: {
-            url: "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:2hkkpfrodwapb4whfvqtbf4b/bafkreidej5leu73pstuq7z46yom36syjy3jkt4j7bjtoabh3ih3kxutnjm@jpeg",
-            width: 615,
-            height: 548,
-            content_type: imageResponse.headers.get("content-type"),
-            flags: 0
-          },
-          footer: {
-            text: "e694",
-            icon_url: "https://e694.net/favicon.png"
-          }
-        }
-      );
-    }
     if (embed === "true") {
       const previewUrl = postInfo.preview?.url;
       const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
@@ -132,7 +100,7 @@ export default async function handler(req, res) {
           <meta name="application-name" content="e694">
           <meta name="generator" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
-          <link type="application/json+oembed" href="https://${host}/posts/${postId}?format=json" title="e694 Embed" />
+          <link rel="alternate" type="application/json+oembed" href="https://e694.net/api/oembed?url=https://e694.net/posts/${postId}" title="e694 Embed" />
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
