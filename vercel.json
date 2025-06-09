@@ -3,11 +3,11 @@
   "rewrites": [
     {
       "source": "/:slug",
-      "destination": "/api/yiff.js?slug=:slug"
+      "destination": "/api/yiff.min.js?slug=:slug"
     },
     {
       "source": "/posts/:postId",
-      "destination": "/api/yiff.js?slug=:postId&embed=true"
+      "destination": "/api/yiff.min.js?slug=:postId&embed=true"
     }
   ]
 }
