@@ -119,6 +119,7 @@ export default async function handler(req, res) {
           <meta name="generator" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
           <link rel="alternate" type="application/json+oembed" href="https://e694.net/api/oembed?url=https%3A%2F%2Fe694.net%2Fposts%2F${postId}" title="e694 Embed" />
+          <link type="application/activity+json" href="https://e694.net/api/oembed?url=https%3A%2F%2Fe694.net%2Fposts%2F${postId}">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
