@@ -10,6 +10,10 @@
       "destination": "/api/yiff.min.js?slug=:postId&embed=true"
     },
     {
+      "source": "/posts/:postId/file",
+      "destination": "/api/yiff.min.js?slug=:postId"
+    },
+    {
       "source": "/posts/:postId/file:ext",
       "destination": "/api/yiff.min.js?slug=:postId:ext"
     }
