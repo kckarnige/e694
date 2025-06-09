@@ -80,33 +80,33 @@ export default async function handler(req, res) {
     const accept = req.headers.accept || "";
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
       const activityJson = {
-        type: "rich",
-        url: `https://${baseDomain}/posts/${postId}`,
-        description: `Rating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}`,
-        color: 0x00709e,
-        timestamp: postInfo.created_at,
-        author: {
-          name: isVideo ? `Video from ${baseDomain} • e694` : `Image from ${baseDomain} • e694`,
-          url: `https://${baseDomain}/posts/${postId}`,
-          icon_url: "https://e694.net/favicon.png",
-          proxy_icon_url: "https://e694.net/favicon.png"
-        },
-        image: {
-          url: previewUrl,
-          proxy_url: previewUrl,
-          width: postUrl.width || 1280,
-          height: postUrl.preview?.height || 720,
-          content_type: `image/${fileExt}`,
-          placeholder: "",
-          placeholder_version: 1,
-          flags: 0
-        },
-        footer: {
-          text: `Post #${postId} on ${baseDomain}`,
-          icon_url: "https://e694.net/favicon.png",
-          proxy_icon_url: "https://e694.net/favicon.png"
-        }
-      };
+            "type": "rich",
+            "url": "https://vxtwitter.com/ClementyneNSFW/status/1931363444168827102",
+            "description": "anyone is fair game",
+            "color": 6513919,
+            "timestamp": "2025-06-07T14:51:42+00:00",
+            "author": {
+                "name": "clem \ud83d\udd1e (@ClementyneNSFW)",
+                "url": "https://x.com/ClementyneNSFW/status/1931363444168827102",
+                "icon_url": "https://pbs.twimg.com/profile_images/1372052918665318403/lIHBc9JN_normal.jpg",
+                "proxy_icon_url": "https://images-ext-1.discordapp.net/external/rpRup3Oo2KVCrcd4phetPGXimDeUvVDARb-VISkAfKc/https/pbs.twimg.com/profile_images/1372052918665318403/lIHBc9JN_normal.jpg"
+            },
+            "image": {
+                "url": "https://vxtwitter.com/rendercombined.jpg?imgs=https://pbs.twimg.com/media/Gs2R3M3akAAz2kl.png,https://pbs.twimg.com/media/Gs2R30hbsAApOjB.png",
+                "proxy_url": "https://images-ext-1.discordapp.net/external/nF8b-ITlw8_nYGuB8dovILqUG8w4RUdr4sJ7j8Eg--s/%3Fimgs%3Dhttps%3A%2F%2Fpbs.twimg.com%2Fmedia%2FGs2R3M3akAAz2kl.png%2Chttps%3A%2F%2Fpbs.twimg.com%2Fmedia%2FGs2R30hbsAApOjB.png/https/vxtwitter.com/rendercombined.jpg",
+                "width": 2400,
+                "height": 1200,
+                "content_type": "image/jpeg",
+                "placeholder": "IwgOBICPhXmHeHiId4gAAAAAAA==",
+                "placeholder_version": 1,
+                "flags": 0
+            },
+            "footer": {
+                "text": "vxTwitter / fixvx",
+                "icon_url": "https://vxtwitter.com/image.png",
+                "proxy_icon_url": "https://images-ext-1.discordapp.net/external/VVX_4i1q5fY3KuETtxx8Ics1aVpVQx57Bbfq2OoEsZ8/https/vxtwitter.com/image.png"
+            }
+        };
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json(activityJson);
     }
