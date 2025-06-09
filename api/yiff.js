@@ -79,7 +79,7 @@ export default async function handler(req, res) {
       }
     });
 
-    if (embed === "true") {
+    if (embed === "rue") {
       const previewUrl = postInfo.preview?.url;
       const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
