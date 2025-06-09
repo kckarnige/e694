@@ -1,8 +1,7 @@
 export default async function handler(req, res) {
   const {
     slug,
-    embed = false,
-    format
+    embed = false
   } = req.query;
 
   if (!slug) {
@@ -43,6 +42,31 @@ export default async function handler(req, res) {
     const postJson = await postData.json();
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
+
+    const accept = req.headers.accept || "";
+    if (ext === "activity+json" || accept.includes("application/activity+json")) {
+      const activityJson = {
+        "@context": [
+          "https://www.w3.org/ns/activitystreams",
+          "https://w3id.org/security/v1"
+        ],
+        "type": "Note",
+        "id": `https://${host}/users/e694/statuses/${postId}`,
+        "attributedTo": `https://${host}/users/e694`,
+        "to": ["https://www.w3.org/ns/activitystreams#Public"],
+        "published": postInfo.created_at,
+        "content": `Post #${postId} from e621.net`,
+        "attachment": [
+          {
+            "type": "Image",
+            "mediaType": `image/${fileExt}`,
+            "url": postInfo.file.url
+          }
+        ]
+      };
+      res.setHeader("Content-Type", "application/activity+json");
+      return res.status(200).json(activityJson);
+    }
 
     const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -100,9 +124,8 @@ export default async function handler(req, res) {
           <meta property="theme-color" content="#00709e" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
-          <meta name="generator" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
-          <link type="application/activity+json" href="https://e694.net/api/oembed?url=https%3A%2F%2Fe694.net%2Fposts%2F${postId}">
+          <link type="application/activity+json" href="">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
