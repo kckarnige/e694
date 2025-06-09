@@ -43,6 +43,14 @@ export default async function handler(req, res) {
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
 
+    const accept = req.headers.accept || "";
+    if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
+      res.setHeader("Content-Type", "application/json+oembed");
+      return res.status(200).json({
+        "author_name":"TEST"
+      });
+    }
+
     const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -97,10 +105,10 @@ export default async function handler(req, res) {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta property="theme-color" content="#00709e" />
-          <meta name="author" content="TEST" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
+          <link rel="alternate" type="application/json+oembed" href="https://${host}/${postId}.json+oembed">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
