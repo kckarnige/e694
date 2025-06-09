@@ -20,12 +20,6 @@ module.exports = async (req, res) => {
   const isVideo = ["mp4", "webm"].includes(postInfo.file.ext);
   const embedUrl = `https://e694.net/posts/${postId}?embed=true`;
 
-  const html = `
-    <iframe src="${embedUrl}"
-            width="600" height="400"
-            frameborder="0" allowfullscreen>
-    </iframe>`;
-
   res.setHeader("Content-Type", "application/json+oembed");
   res.json({
     version: "1.0",
@@ -35,6 +29,5 @@ module.exports = async (req, res) => {
     title: `#${postId} by ${postInfo.tags.artist[0] ?? "unknown"}`,
     width: 600,
     height: 400,
-    html
   });
 };
