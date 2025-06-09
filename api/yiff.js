@@ -96,7 +96,12 @@ export default async function handler(req, res) {
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta property="theme-color" content="#00709e" />
           <link rel="icon" href="/favicon.ico" />
-          <link rel="apple-touch-icon" href="/favicon.png" />
+          <meta name="application-name" content="e694">
+          <meta name="generator" content="e694">
+          <link type="application/activity+json" href="">
+          <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
+          <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
 
           <!-- Open Graph -->
