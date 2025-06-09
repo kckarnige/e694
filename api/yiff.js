@@ -53,7 +53,6 @@ export default async function handler(req, res) {
         title: `Post #${postId}`,
         author_name: "KiCKTheBucket",
         author_url: `https://e694.net`,
-        html: `<iframe src="https://e694.net/embed/${postId}" width="600" height="400" frameborder="0" allowfullscreen></iframe>`,
         width: 600,
         height: 400
       };
