@@ -42,14 +42,14 @@ export default async function handler(req, res) {
     const postJson = await postData.json();
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
-
-    const accept = req.headers.accept || "";
-    if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
-      res.setHeader("Content-Type", "application/json+oembed");
-      return res.status(200).json({
-        "author_name":"TEST"
-      });
-    }
+    const previewUrl = postInfo.preview?.url;
+    const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
+    const isVideo = ["webm", "mp4"].includes(fileExt);
+    var postAuthor;
+    var sndWarn = "";
+    var authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
+    var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
+    var realAuthors = authors.filter(real => !exclude.includes(real));
 
     const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -77,15 +77,15 @@ export default async function handler(req, res) {
       }
     });
 
+    const accept = req.headers.accept || "";
+    if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
+      res.setHeader("Content-Type", "application/json+oembed");
+      return res.status(200).json({
+        "author_name": `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}`,
+      });
+    }
+
     if (embed === "true") {
-      const previewUrl = postInfo.preview?.url;
-      const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
-      const isVideo = ["webm", "mp4"].includes(fileExt);
-      var postAuthor;
-      var sndWarn = "";
-      var authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
-      var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
-      var realAuthors = authors.filter(real => !exclude.includes(real));
 
       if (postInfo.tags.artist.includes("sound_warning")
         || postInfo.tags.meta.includes("sound")
@@ -115,7 +115,6 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
-          <meta property="og:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
