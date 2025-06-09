@@ -69,5 +69,3 @@ or
 Works with videos too!
 
 ![video example](https://e694.net/video_example.png)
-
-<sub>Due to how Discord handles embeds, post info for videos will only work if you enable it via a Discord plugin 
