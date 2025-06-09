@@ -67,7 +67,9 @@ export default async function handler(req, res) {
       }
     });
 
-    if (embed === "true") {
+    const acceptsOembedJson = req.headers.accept?.includes("application/json+oembed");
+
+    if (embed === "true" || acceptsOembedJson) {
       const previewUrl = postInfo.preview?.url;
       const postUrl = ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : `https://${host}/${postId}.${fileExt}`;
       const isVideo = ["webm", "mp4"].includes(fileExt);
@@ -88,6 +90,25 @@ export default async function handler(req, res) {
       } else {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
       }
+
+      // Handle oEmbed JSON response
+      if (acceptsOembedJson) {
+        const oembedData = {
+          version: "1.0",
+          type: "rich",
+          provider_name: "e694",
+          provider_url: "https://e694.net",
+          title: `Post #${postId}`,
+          author_name: postAuthor ?? "Unknown",
+          author_url: `https://${baseDomain}/posts/${postId}`,
+          html: `<iframe src="https://${host}/posts/${postId}?embed=true" width="600" height="400" frameborder="0" allowfullscreen></iframe>`,
+          width: 600,
+          height: 400
+        };
+        res.setHeader("Content-Type", "application/json+oembed");
+        return res.status(200).json(oembedData);
+      }
+
       const embedHtml = `
         <!DOCTYPE html>
         <html>
@@ -97,12 +118,11 @@ export default async function handler(req, res) {
           <meta property="theme-color" content="#00709e" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
-          <meta name="generator" content="e694">
-          <link type="application/activity+json" href="">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
+          <link rel="alternate" type="application/json+oembed" href="https://${host}/posts/${postId}" title="e694 Embed" />
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
