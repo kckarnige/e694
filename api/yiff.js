@@ -46,23 +46,16 @@ export default async function handler(req, res) {
     const accept = req.headers.accept || "";
     if (ext === "activity+json" || accept.includes("application/activity+json")) {
       const activityJson = {
-        "@context": [
-          "https://www.w3.org/ns/activitystreams",
-          "https://w3id.org/security/v1"
-        ],
-        "type": "Note",
-        "id": `https://${host}/users/e694/statuses/${postId}`,
-        "attributedTo": `https://${host}/users/e694`,
-        "to": ["https://www.w3.org/ns/activitystreams#Public"],
-        "published": postInfo.created_at,
-        "content": `Post #${postId} from e621.net`,
-        "attachment": [
-          {
-            "type": "Image",
-            "mediaType": `image/${fileExt}`,
-            "url": postInfo.file.url
-          }
-        ]
+        version: "1.0",
+        type: "rich",
+        provider_name: "e694",
+        provider_url: "https://e694.net",
+        title: `Post #${postId}`,
+        author_name: "KiCKTheBucket",
+        author_url: `https://e694.net`,
+        html: `<iframe src="https://e694.net/embed/${postId}" width="600" height="400" frameborder="0" allowfullscreen></iframe>`,
+        width: 600,
+        height: 400
       };
       res.setHeader("Content-Type", "application/activity+json");
       return res.status(200).json(activityJson);
