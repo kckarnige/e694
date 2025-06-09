@@ -122,7 +122,56 @@ export default async function handler(req, res) {
         postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
       }
       const embedHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <meta property="theme-color" content="#00709e" />
+          <link rel="icon" href="/favicon.ico" />
+          <meta name="application-name" content="e694">
+          <meta name="generator" content="e694">
+          <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
           <link type="application/json+oembed" href="https://${host}/posts/${postId}?format=json" title="e694 Embed" />
+          <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
+          <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
+          <meta property="title" content="#${postId}" />
+
+          <!-- Open Graph -->
+          <meta property="og:title" content="#${postId} by ${postAuthor}" />
+          <meta property="og:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}" />
+          <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
+          ${isVideo ? `
+            <meta property="og:video" content="${postUrl}" />
+            <meta property="og:video:type" content="video/${fileExt}" />
+            <meta property="og:video:width" content="1280" />
+            <meta property="og:video:height" content="720" />
+            <meta property="og:image" content="${previewUrl}" />
+            <meta property="og:site_name" content="Video from ${baseDomain} • e694">
+          ` : `
+            <meta property="og:image" content="${postUrl}" />
+            <meta property="og:site_name" content="Image from ${baseDomain} • e694">
+          `}
+
+          <!-- Twitter -->
+          <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
+          <meta property="twitter:title" content="Post from ${baseDomain}" />
+          <meta property="twitter:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}" />
+          ${isVideo ? `
+            <meta property="twitter:image" content="${previewUrl}" />
+            <meta property="twitter:player" content="${postUrl}" />
+            <meta property="twitter:player:width" content="1280" />
+            <meta property="twitter:player:height" content="720" />
+            <meta property="twitter:player:stream" content="${postUrl}" />
+            <meta property="twitter:player:stream:content_type" content="video/${fileExt}" />
+          ` : `
+            <meta property="twitter:image" content="${postUrl}" />
+          `}
+        </head>
+        <body>
+            <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
+        </body>
+        </html>
       `.trim();
 
       res.setHeader("Content-Type", "text/html");
