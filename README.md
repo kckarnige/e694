@@ -58,7 +58,9 @@ For anyone who wants to send someone an e621 post. Works just like official mean
 
 `https://e694.net/5302549.gif`  
 or  
-`https://e694.net/posts/5302549/file`
+`https://e694.net/posts/5302549/file`  
+or  
+`https://e694.net/posts/5302549/file.gif`
 
 [![example](https://e694.net/posts/5302549/file)](https://e694.net/posts/5302549/file)
 
