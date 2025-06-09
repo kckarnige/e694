@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     const fileExt = ext ?? postInfo.file.ext;
 
     const accept = req.headers.accept || "";
-    if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
+    if (ext === "activity+json" || accept.includes("application/activity+json")) {
       const activityJson = {
         version: "1.0",
         type: "rich",
@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         width: 600,
         height: 400
       };
-      res.setHeader("Content-Type", "application/json+oembed");
+      res.setHeader("Content-Type", "application/activity+json");
       return res.status(200).json(activityJson);
     }
 
@@ -117,7 +117,7 @@ export default async function handler(req, res) {
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
-          <link rel="alternate" type="application/json+oembed" href="https://${host}/${postId}.json+oembed">
+          <link rel="alternate" type="application/activity+json" href="https://${host}/${postId}.activity+json">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
