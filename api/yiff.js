@@ -44,22 +44,6 @@ export default async function handler(req, res) {
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
 
-    const isOembedRequest = ext === "json" || format === "json" || (req.headers.accept || "").includes("application/json+oembed");
-    if (isOembedRequest) {
-      return res.status(200).json({
-        version: "1.0",
-        type: "rich",
-        provider_name: "e694",
-        provider_url: "https://e694.net",
-        title: `Post #${postId}`,
-        author_name: "KiCKTheBucket (@kckarnige.online)",
-        author_url: `https://${baseDomain}/posts/${postId}`,
-        html: `<iframe src="https://${host}/${postId}.${fileExt}?embed=true" width="600" height="400" frameborder="0" allowfullscreen></iframe>`,
-        width: 600,
-        height: 400
-      });
-    }
-
     const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -118,7 +102,6 @@ export default async function handler(req, res) {
           <meta name="application-name" content="e694">
           <meta name="generator" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
-          <link rel="alternate" type="application/json+oembed" href="https://e694.net/api/oembed?url=https%3A%2F%2Fe694.net%2Fposts%2F${postId}" title="e694 Embed" />
           <link type="application/activity+json" href="https://e694.net/api/oembed?url=https%3A%2F%2Fe694.net%2Fposts%2F${postId}">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
