@@ -1,7 +1,8 @@
 export default async function handler(req, res) {
   const {
     slug,
-    embed = false
+    embed = false,
+    format
   } = req.query;
 
   if (!slug) {
@@ -42,6 +43,23 @@ export default async function handler(req, res) {
     const postJson = await postData.json();
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
+
+    const isOembedRequest = ext === "json" || format === "json" || (req.headers.accept || "").includes("application/json+oembed");
+    if (isOembedRequest) {
+      return res.status(200).json({
+        version: "1.0",
+        type: "rich",
+        provider_name: "e694",
+        provider_url: "https://e694.net",
+        title: `Post #${postId}`,
+        author_name: "KiCKTheBucket (@kckarnige.online)",
+        author_url: `https://${baseDomain}/posts/${postId}`,
+        html: `<iframe src="https://${host}/${postId}.${fileExt}?embed=true" width="600" height="400" frameborder="0" allowfullscreen></iframe>`,
+        width: 600,
+        height: 400
+      });
+    }
+
     const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
