@@ -51,6 +51,32 @@ export default async function handler(req, res) {
     var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
     var realAuthors = authors.filter(real => !exclude.includes(real));
 
+    const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+
+    const ratingMap = {
+      s: "Safe",
+      q: "Questionable",
+      e: "Explicit"
+    };
+
+    if (ext === "json") {
+      return res.status(200).json(postJson);
+    }
+
+    if (!postInfo || !postInfo.file?.url) {
+      return res.status(404).json({ error: "Media URL not found in post data" });
+    }
+
+    const imageResponse = await fetch(postInfo.file.url, {
+      headers: {
+        "User-Agent": "e694/1.2"
+      }
+    });
+
     const accept = req.headers.accept || "";
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
       const activityJson = {
@@ -84,32 +110,6 @@ export default async function handler(req, res) {
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json(activityJson);
     }
-
-    const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-
-    const ratingMap = {
-      s: "Safe",
-      q: "Questionable",
-      e: "Explicit"
-    };
-
-    if (ext === "json") {
-      return res.status(200).json(postJson);
-    }
-
-    if (!postInfo || !postInfo.file?.url) {
-      return res.status(404).json({ error: "Media URL not found in post data" });
-    }
-
-    const imageResponse = await fetch(postInfo.file.url, {
-      headers: {
-        "User-Agent": "e694/1.2"
-      }
-    });
 
     if (embed === "true") {
 
