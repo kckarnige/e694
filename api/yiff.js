@@ -97,7 +97,7 @@ export default async function handler(req, res) {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <meta property="theme-color" content="#00709e" />
-          <meta property="author" content="TEST" />
+          <meta name="author" content="TEST" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
           <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
