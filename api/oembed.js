@@ -1,33 +1,18 @@
-module.exports = async (req, res) => {
+export default function handler(req, res) {
   const { url } = req.query;
+  const postId = new URL(url).pathname.split('/').pop();
 
-  if (!url || !url.includes("/posts/")) {
-    return res.status(400).json({ error: "Missing or invalid URL" });
-  }
-
-  const postId = url.split("/posts/")[1].split(/[?#]/)[0].split(".")[0];
-  const postJson = await fetch(`https://e621.net/posts/${postId}.json`, {
-    headers: { "User-Agent": "e694/1.2" }
-  }).then(r => r.json()).catch(() => null);
-
-  if (!postJson || !postJson.post) {
-    return res.status(404).json({ error: "Post not found" });
-  }
-
-  const postInfo = postJson.post;
-
-  // Use preview if video; else full image
-  const isVideo = ["mp4", "webm"].includes(postInfo.file.ext);
-  const embedUrl = `https://e694.net/posts/${postId}?embed=true`;
-
-  res.setHeader("Content-Type", "application/json+oembed");
-  res.json({
+  res.setHeader('Content-Type', 'application/json+oembed');
+  res.status(200).json({
     version: "1.0",
     type: "rich",
     provider_name: "e694",
     provider_url: "https://e694.net",
-    title: `#${postId} by ${postInfo.tags.artist[0] ?? "unknown"}`,
+    title: `Post #${postId}`,
+    author_name: "KiCKTheBucket",
+    author_url: `https://e694.net`,
+    html: `<iframe src="https://e694.net/embed/${postId}" width="600" height="400" frameborder="0" allowfullscreen></iframe>`,
     width: 600,
-    height: 400,
+    height: 400
   });
-};
+}
