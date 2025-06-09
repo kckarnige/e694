@@ -51,6 +51,12 @@ export default async function handler(req, res) {
     var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
     var realAuthors = authors.filter(real => !exclude.includes(real));
 
+    if (postInfo.tags.artist.includes("sound_warning")
+      || postInfo.tags.meta.includes("sound")
+      && !postInfo.tags.meta.includes("no_sound")) {
+      sndWarn = "\n🔊 Sound Warning! 🔊"
+    }
+
     const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
@@ -81,17 +87,11 @@ export default async function handler(req, res) {
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json({
-        "author_name": `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}`,
+        "author_name": `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}`,
       });
     }
 
     if (embed === "true") {
-
-      if (postInfo.tags.artist.includes("sound_warning")
-        || postInfo.tags.meta.includes("sound")
-        && !postInfo.tags.meta.includes("no_sound")) {
-        sndWarn = "\n\n🔊 Sound Warning! 🔊"
-      }
 
       if (realAuthors.length === 1) {
         postAuthor = `${realAuthors[0]}`
@@ -131,7 +131,6 @@ export default async function handler(req, res) {
           <!-- Twitter -->
           <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
           <meta property="twitter:title" content="Post from ${baseDomain}" />
-          <meta property="twitter:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]}\nScore: ${postInfo.score.total}${sndWarn}" />
           ${isVideo ? `
             <meta property="twitter:image" content="${previewUrl}" />
             <meta property="twitter:player" content="${postUrl}" />
