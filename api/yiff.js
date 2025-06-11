@@ -135,6 +135,7 @@ export default async function handler(req, res) {
           ` : `
             <meta property="twitter:image" content="${postUrl}" />
           `}
+          <style>html,body{background:#012e57;}</style>
         </head>
         <body>
             <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
