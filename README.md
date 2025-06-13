@@ -37,40 +37,48 @@ For anyone who wants to send someone an e621 post. Works just like official mean
 
 ## Available Domains:
 
-### Safe-Rated Content:
-
 - e694.net
-- e694.kckarnige.online
-- e694.vercel.app
-- e926.kckarnige.online
-- e926-media.vercel.app
-
-### All Content
-
 - e.e694.net
 - e621.e694.net
 - e621.kckarnige.online
 - e621-media.vercel.app
 
+### Filtered Domains:
+
+- s.e694.net
+- e694.kckarnige.online
+- e694.vercel.app
+- e926.kckarnige.online
+- e926-media.vercel.app
+
+<details>
+<summary>
+<h3>What's the difference?</h3>
+</summary>
+e621 is known as "the furry porn website", however they do have a alternative domain which displays EXCLUSIVELY safe-rated content called e926.
+
+"Filtered" domains will link to e926, and if the post is meant to link to anything above a "safe" rating, it will not be displayed.
+</details>
+
 ## Examples:
 
 ### File Example:
 
-`https://e694.net/5302549.gif`  
+`https://s.e694.net/5302549.gif`  
 or  
-`https://e694.net/posts/5302549/file`  
+`https://s.e694.net/posts/5302549/file`  
 or  
-`https://e694.net/posts/5302549/file.gif`
+`https://s.e694.net/posts/5302549/file.gif`
 
-[![example](https://e694.net/posts/5302549/file)](https://e694.net/posts/5302549/file)
+[![example](https://s.e694.net/posts/5302549/file)](https://s.e694.net/posts/5302549/file)
 
 ### Embed Example:
 
-`https://e694.net/5302549.gif?embed=true`  
+`https://s.e694.net/5302549.gif?embed=true`  
 or  
-`https://e694.net/posts/5302549`
+`https://s.e694.net/posts/5302549`
 
-![embed example](https://e694.net/embed_example.png)
+![embed example](https://s.e694.net/embed_example.png)
 
 Works with videos too!
 
