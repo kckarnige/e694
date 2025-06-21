@@ -28,7 +28,7 @@ For anyone who wants to send someone else an eSix or eNine post. Embeds show pos
 ### Why should I use this?
 
 - No restrictions on who or what can fetch the content.
-- Unlike eSix and eNine's embeds, e694 embeds support displaying video!
+- Unlike eSix and eNine's embeds, e694 embeds support displaying video! If the video contains sound, the embed will let you know!
 - Media URLs are shorter and straight-forwards.
 - Works just about the same as official eSix.
 - Author count also includes contributors.
