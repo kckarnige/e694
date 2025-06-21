@@ -21,17 +21,18 @@
 
 >*(A-Z/1-9) FIX -> 694*
 
-For anyone who wants to send someone an e621 post. Works just like official means, just more consistent and flexible! No restrictions, and URLs can end with filenames!
+For anyone who wants to send someone else an eSix or eNine post. Embeds show post info like rating, score, date posted, and the presumed author based on tags. It also supports video for Discord embeds! All you need to do is switch "e621" with "e694" in the URL; this also works with "e926"!
 
 ----
 
 ### Why should I use this?
 
 - No restrictions on who or what can fetch the content.
+- Unlike eSix and eNine's embeds, e694 embeds support displaying video!
 - Media URLs are shorter and straight-forwards.
-- Works just about the same as official e6.
-- Embed accounts for contributors, even for e926.
-- Media size in embeds are consistent, meaning pixel art can be seen in embeds just like a 4K image.
+- Works just about the same as official eSix.
+- Author count also includes contributors.
+- Media display size in embeds are consistent, meaning pixel art can be seen in embeds just as well as a video.
 
 ----
 
@@ -55,9 +56,9 @@ For anyone who wants to send someone an e621 post. Works just like official mean
 <summary>
 <h3>What's the difference?</h3>
 </summary>
-e621 is known as "the furry porn website", however they do have a alternative domain which displays EXCLUSIVELY safe-rated content called e926.
+"e621" is known as "the furry porn website", however they do have a alternative domain which displays EXCLUSIVELY safe-rated content called "e926".
 
-"Filtered" domains will link to e926, and if the post is meant to link to anything above a "safe" rating, it will not be displayed.
+"Filtered" domains will link to eNine, and if the post is meant to link to anything above a "safe" rating, it will not be displayed.
 </details>
 
 ## Examples:
