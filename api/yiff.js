@@ -41,12 +41,7 @@ export default async function handler(req, res) {
     const fileExt = ext ?? postInfo.file.ext;
     const previewUrl = postInfo.preview?.url;
     const postUrl = `https://${host}/${postId}.${fileExt}`;
-    var isVideo = false;
-    if ((baseDomain == "e926.net") && postInfo.rating !== "s") {
-      isVideo == false;
-    } else if (["webm", "mp4"].includes(fileExt)) {
-      isVideo == true;
-    }
+    const isVideo = (!((baseDomain == "e926.net") && postInfo.rating !== "s") && ["webm", "mp4"].includes(fileExt));
     var postAuthor;
     var sndWarn = "";
     var authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
