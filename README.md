@@ -1,4 +1,4 @@
-<img  align="left" alt="e694" src="./icon.svg">
+<img  align="left" alt="e694" src="./public/icon.svg">
 
 <p align="right">
   <br>

@@ -99,8 +99,8 @@ export default async function handler(req, res) {
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
           <link rel="alternate" type="application/json+oembed" href="https://${host}/${postId}.json+oembed">
-          <link rel="apple-touch-icon" href="https://e694.net/favicon.png" />
-          <link rel="icon" type="image/png" href="https://e694.net/favicon.png">
+          <link rel="apple-touch-icon" href="https://e694.net/icon.png" />
+          <link rel="icon" type="image/png" href="https://e694.net/icon.png">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
