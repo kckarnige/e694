@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
 
   var unfilteredList = [];
-  fetch('./whitelist.json')
+  fetch('https://e694.net/whitelist.json')
     .then((response) => response.json())
     .then((json) => unfilteredList=JSON.parse(json)+"");
     
