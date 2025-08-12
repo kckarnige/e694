@@ -2,7 +2,7 @@ export default async function handler(req, res) {
 
   var unfilteredList = [];
   try {
-    var whitelistFetch = await fetch("https://e694.net/unfiltered.json");
+    var whitelistFetch = await fetch("/unfiltered.json");
     unfilteredList = await whitelistFetch.json();
   }
   catch (err) {
