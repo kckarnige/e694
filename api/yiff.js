@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   try {
     const postData = await fetch(postDataUrl, {
       headers: {
-        "User-Agent": "e694/1.5"
+        "User-Agent": "e694/1.6"
       }
     });
 
@@ -44,7 +44,7 @@ export default async function handler(req, res) {
     const postInfo = postJson?.post;
     const fileExt = ext ?? postInfo.file.ext;
     const previewUrl = postInfo.preview?.url;
-    const postUrl = `https://${host}/${postId}.${fileExt}`;
+    const postUrl = `https://${host}/posts/${postId}/file.${fileExt}`;
     const isVideo = (!((baseDomain == "e926.net") && postInfo.rating !== "s") && ["webm", "mp4"].includes(fileExt));
     var postAuthor;
     var sndWarn = "";
@@ -152,7 +152,7 @@ export default async function handler(req, res) {
     const imageResponse = await fetch(
       ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : postInfo.file.url, {
       headers: {
-        "User-Agent": "e694/1.5"
+        "User-Agent": "e694/1.6"
       }
     });
 
