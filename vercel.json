@@ -3,15 +3,15 @@
   "rewrites": [
     {
       "source": "/posts/:postId",
-      "destination": "/api/yiff.min.js?slug=:postId&embed=true"
+      "destination": "/api/yiff.js?slug=:postId&embed=true"
     },
     {
       "source": "/posts/:postId/file",
-      "destination": "/api/yiff.min.js?slug=:postId"
+      "destination": "/api/yiff.js?slug=:postId"
     },
     {
       "source": "/posts/:postId/file:ext",
-      "destination": "/api/yiff.min.js?slug=:postId:ext"
+      "destination": "/api/yiff.js?slug=:postId:ext"
     }
   ]
 }

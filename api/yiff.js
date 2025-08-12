@@ -104,7 +104,7 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
-          <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
+          <meta property="og:type" content="${isVideo ? 'video.other' : 'website'}" />
           <meta property="og:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}" />
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
