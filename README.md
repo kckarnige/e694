@@ -82,7 +82,11 @@ or
 
 Works with videos too!
 
-![video example](https://e694.net/video_example.png)This was made with Vercel, and as such it's pretty simple to make your own deployment!
+![video example](https://e694.net/video_example.png)
+
+## Self Hosting
+
+This was made with Vercel, and as such it's pretty simple to make your own deployment!
 Here's the *magic 'deploy' button.*
 
 <a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkckarnige%2Fe694"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
