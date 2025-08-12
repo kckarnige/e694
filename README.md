@@ -10,6 +10,10 @@
     <img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg">
   </a>
   <br>
+  <a href="https://github.com/sponsors/kckarnige" target="_blank">
+    <img alt="ghsponsors-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/ghsponsors-singular_vector.svg">
+  </a>
+  <br>
   <a href="https://ko-fi.com/kckarnige" target="_blank">
     <img alt="kofi-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/kofi-singular_vector.svg">
   </a>
