@@ -2,11 +2,12 @@ export default async function handler(req, res) {
 
   var unfilteredList = [];
   try {
-    var whitelistFetch = await fetch("https://e694.net/whitelist.json");
+    var whitelistFetch = await fetch("https://e694.net/unfiltered.json");
     unfilteredList = await whitelistFetch.json();
   }
   catch (err) {
-    console.error("Couldn't grab the whitelist:", err);
+    console.error("Couldn't grab the unfiltered domain whitelist:", err);
+    return res.status(500).json({ error: `Couldn't grab the unfiltered domain whitelist: ${err}` });
   }
 
   const {
@@ -32,7 +33,7 @@ export default async function handler(req, res) {
   try {
     const postData = await fetch(postDataUrl, {
       headers: {
-        "User-Agent": "e694/1.4"
+        "User-Agent": "e694/1.5"
       }
     });
 
@@ -152,7 +153,7 @@ export default async function handler(req, res) {
     const imageResponse = await fetch(
       ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : postInfo.file.url, {
       headers: {
-        "User-Agent": "e694/1.4"
+        "User-Agent": "e694/1.5"
       }
     });
 
