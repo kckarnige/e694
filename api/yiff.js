@@ -78,14 +78,6 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: "Media URL not found in post data" });
     }
 
-    const accept = req.headers.accept || "";
-    if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
-      res.setHeader("Content-Type", "application/json+oembed");
-      return res.status(200).json({
-        "author_name": `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}`,
-      });
-    }
-
     if (embed === "true") {
 
       if (realAuthors.length === 1) {
@@ -102,6 +94,7 @@ export default async function handler(req, res) {
           <meta property="theme-color" content="#00709e" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
+
           <link rel="alternate" type="application/json+oembed" href="https://${host}/${postId}.json+oembed">
           <link rel="apple-touch-icon" href="https://e694.net/icon.png" />
           <link rel="icon" type="image/png" href="https://e694.net/icon.png">
@@ -112,6 +105,7 @@ export default async function handler(req, res) {
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'image'}" />
+          <meta property="og:description" content="Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}" />
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
