@@ -1,19 +1,19 @@
 export default async function handler(req, res) {
+  const {
+    slug,
+    embed = false
+  } = req.query;
+  const host = req.headers.host || "";
 
   var unfilteredList = [];
   try {
-    var whitelistFetch = await fetch("/unfiltered.json");
+    var whitelistFetch = await fetch(`https://${host}/unfiltered.json`);
     unfilteredList = await whitelistFetch.json();
   }
   catch (err) {
     console.error("Couldn't grab the unfiltered domain whitelist:", err);
     return res.status(500).json({ error: `Couldn't grab the unfiltered domain whitelist: ${err}` });
   }
-
-  const {
-    slug,
-    embed = false
-  } = req.query;
 
   if (!slug) {
     return res.status(400).json({ error: "Invalid or missing post ID and extension" });
@@ -22,7 +22,6 @@ export default async function handler(req, res) {
   const [postId, ext] = slug.split('.');
   const postDataUrl = `https://e621.net/posts/${postId}.json`;
 
-  const host = req.headers.host || "";
   var baseDomain;
   if (unfilteredList.includes(host)) {
     baseDomain = "e621.net";
