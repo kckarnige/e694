@@ -1,10 +1,14 @@
 export default async function handler(req, res) {
 
   var unfilteredList = [];
-  fetch('https://e694.net/whitelist.json')
-    .then((response) => response.json())
-    .then((json) => unfilteredList=JSON.parse(json)+"");
-    
+  try {
+    var whitelistFetch = await fetch("https://e694.net/whitelist.json");
+    unfilteredList = await whitelistFetch.json();
+  }
+  catch (err) {
+    console.error("Couldn't grab the whitelist:", err);
+  }
+
   const {
     slug,
     embed = false
@@ -19,7 +23,7 @@ export default async function handler(req, res) {
 
   const host = req.headers.host || "";
   var baseDomain;
-  if (unfilteredList.contains(host)) {
+  if (unfilteredList.includes(host)) {
     baseDomain = "e621.net";
   } else {
     baseDomain = "e926.net";
