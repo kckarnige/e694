@@ -1,4 +1,10 @@
 export default async function handler(req, res) {
+
+  var unfilteredList = [];
+  fetch('./whitelist.json')
+    .then((response) => response.json())
+    .then((json) => unfilteredList=JSON.parse(json)+"");
+    
   const {
     slug,
     embed = false
@@ -13,13 +19,7 @@ export default async function handler(req, res) {
 
   const host = req.headers.host || "";
   var baseDomain;
-  if (
-    host == "e694.net" ||
-    host == "e.e694.net" ||
-    host == "e621.e694.net" ||
-    host == "e621.kckarnige.online" ||
-    host == "e621-media.vercel.app"
-  ) {
+  if (unfilteredList.contains(host)) {
     baseDomain = "e621.net";
   } else {
     baseDomain = "e926.net";

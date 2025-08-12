@@ -27,16 +27,16 @@ For anyone who wants to send someone else an eSix or eNine post. Embeds show pos
 
 ### Why should I use this?
 
-- No restrictions on who or what can fetch the content.
-- Unlike eSix and eNine's embeds, e694 embeds support displaying video! If the video contains sound, the embed will let you know!
-- Media URLs are shorter and straight-forwards.
-- Works just about the same as official eSix.
-- Author count also includes contributors.
-- Media display size in embeds are consistent, meaning pixel art can be seen in embeds just as well as a video.
+- No restrictions on who or what can fetch content.
+- Adding '/file' at the end gives you the raw media file.
+- If the post is a video containing sound, the embed will let you know!
+- The author count in embeds also includes contributors.
+- Media display size in embeds are consistent, meaning pixel art can be seen in embeds just as well as a 4K image!
+- Just change your link's domain from 'e621.net' to 'e694.net', and you're good to go!
 
 ----
 
-## Available Domains:
+## Official Domains:
 
 - e694.net
 - e.e694.net
@@ -44,29 +44,28 @@ For anyone who wants to send someone else an eSix or eNine post. Embeds show pos
 - e621.kckarnige.online
 - e621-media.vercel.app
 
-### Filtered Domains:
+**"Safe" Filtered Domains:**
 
 - s.e694.net
+- e926.e694.net
 - e694.kckarnige.online
 - e694.vercel.app
 - e926.kckarnige.online
 - e926-media.vercel.app
-
-<details>
-<summary>
+---
 <h3>What's the difference?</h3>
-</summary>
-"e621" is known as "the furry porn website", however they do have a alternative domain which displays EXCLUSIVELY safe-rated content called "e926".
+eSix is known for it's explicit content, however they do have a alternative domain which displays EXCLUSIVELY posts rated as "safe" called "eNine" (e926.net).
+<br><br>
+When using a "filtered" domain, if the post is meant to link to anything above a "safe" rating, it will not be displayed, even if the media file for the post itself is trying to be fetched.
+<br><br>
+Attempting to do so will serve this image:
+<br><br>
+<img width="256px" src="./public/unsafe.png" />
 
-"Filtered" domains will link to eNine, and if the post is meant to link to anything above a "safe" rating, it will not be displayed.
-</details>
-
-## Examples:
+## Link Examples:
 
 ### File Example:
 
-`https://s.e694.net/5302549.gif`  
-or  
 `https://s.e694.net/posts/5302549/file`  
 or  
 `https://s.e694.net/posts/5302549/file.gif`
@@ -75,8 +74,6 @@ or
 
 ### Embed Example:
 
-`https://s.e694.net/5302549.gif?embed=true`  
-or  
 `https://s.e694.net/posts/5302549`
 
 ![embed example](https://s.e694.net/embed_example.png)
