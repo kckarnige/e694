@@ -2,7 +2,9 @@
 
 <p align="right">
   <br>
-  <i>If you'd like to support what I do, please consider donating, it'd help a lot, and it'd help keep "e694.net" up!</i>
+  <br>
+  <i>If you'd like to support what I do, please consider donating,<br>it'd help a lot, and it'd help keep "e694.net" up!</i>
+  <br>
   <br>
   <a href="https://www.buymeacoffee.com/kckarnige" target="_blank">
     <img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg">
@@ -80,4 +82,9 @@ or
 
 Works with videos too!
 
-![video example](https://e694.net/video_example.png)
+![video example](https://e694.net/video_example.png)This was made with Vercel, and as such it's pretty simple to make your own deployment!
+Here's the *magic 'deploy' button.*
+
+<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkckarnige%2Fe694"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
+
+<sub>I will not be providing *any* assistance with deploying, you're on your own. If self deploying is even a thing on your mind, you definitely have the brain-power do it on your own, I believe in you. :3</sub> 
