@@ -32,7 +32,7 @@ export default async function handler(req, res) {
   try {
     const postData = await fetch(postDataUrl, {
       headers: {
-        "User-Agent": "e694/1.6"
+        "User-Agent": "e694/1.7"
       }
     });
 
@@ -83,7 +83,7 @@ export default async function handler(req, res) {
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json({
         "author_name": `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}`,
-        "provider_name": "e694",
+        "provider_name": isVideo ? `Video from ${baseDomain} • e694` : `Image from ${baseDomain} • e694`
       });
     }
 
@@ -109,20 +109,20 @@ export default async function handler(req, res) {
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
           <link rel="icon" type="image/png" sizes="16x16" href="https://e694.net/favicon16.png">
           <meta property="title" content="#${postId}" />
+          <meta property="article:published_time" content="${postInfo.created_at}">
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'article'}" />
+          <meta property="og:site_name" content="${baseDomain} via e694">
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
-            <meta property="og:site_name" content="Video from ${baseDomain} • e694">
           ` : `
             <meta property="og:image" content="${postUrl}" />
-            <meta property="og:site_name" content="Image from ${baseDomain} • e694">
           `}
 
           <!-- Twitter -->
@@ -153,7 +153,7 @@ export default async function handler(req, res) {
     const imageResponse = await fetch(
       ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : postInfo.file.url, {
       headers: {
-        "User-Agent": "e694/1.6"
+        "User-Agent": "e694/1.7"
       }
     });
 
