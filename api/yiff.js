@@ -102,7 +102,7 @@ export default async function handler(req, res) {
           <meta property="theme-color" content="#00709e" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="application-name" content="e694">
-          <link rel="alternate" type="application/json+oembed" href="https://${host}/${postId}.json+oembed">
+          <link rel="alternate" type="application/json+oembed" href="https://${host}/posts/${postId}/file.json+oembed">
           <link rel="apple-touch-icon" href="https://e694.net/icon.png" />
           <link rel="icon" type="image/png" href="https://e694.net/icon.png">
           <link rel="icon" type="image/png" sizes="32x32" href="https://e694.net/favicon32.png">
