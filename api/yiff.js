@@ -83,6 +83,7 @@ export default async function handler(req, res) {
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json({
         "author_name": `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}`,
+        "provider_name": "e694",
       });
     }
 
