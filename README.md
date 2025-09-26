@@ -45,24 +45,28 @@ For anyone who wants to send someone else an eSix or eNine post. Embeds show pos
 ## Official Domains:
 
 - e694.net
-- e.e694.net
+- e.e994.net
 - e621.e694.net
+- e621.e994.net
 - e621.kckarnige.online
 - e621-media.vercel.app
 
-**"Safe" Filtered Domains:**
+**Filtered Domains:**
 
+- e994.net
 - s.e694.net
 - e926.e694.net
+- e926.e994.net
 - e694.kckarnige.online
 - e694.vercel.app
+- e994.vercel.app 
 - e926.kckarnige.online
 - e926-media.vercel.app
 ---
 <h3>What's the difference?</h3>
 eSix is known for it's explicit content, however they do have a alternative domain which displays EXCLUSIVELY posts rated as "safe" called "eNine" (e926.net).
 <br><br>
-When using a "filtered" domain, if the post is meant to link to anything above a "safe" rating, it will not be displayed, even if the media file for the post itself is trying to be fetched.
+When using a filtered domain, if the post is meant to link to anything above a "safe" rating, it will not be displayed, even if the media file for the post itself is trying to be fetched.
 <br><br>
 Attempting to do so will serve this image:
 <br><br>
@@ -72,11 +76,11 @@ Attempting to do so will serve this image:
 
 ### File Example:
 
-`https://s.e694.net/posts/5302549/file`  
+`https://e994.net/posts/5302549/file`  
 or  
-`https://s.e694.net/posts/5302549/file.gif`
+`https://e994.net/posts/5302549/file.gif`
 
-[![example](https://s.e694.net/posts/5302549/file)](https://s.e694.net/posts/5302549/file)
+[![example](https://e994.net/posts/5302549/file)](https://e994.net/posts/5302549/file)
 
 ### Embed Example:
 
