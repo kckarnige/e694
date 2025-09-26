@@ -3,7 +3,7 @@
 <p align="right">
   <br>
   <br>
-  <i>If you'd like to support what I do, please consider donating,<br>it'd help a lot, and it'd help keep "e694.net" up!</i>
+  <i>If you'd like to support what I do, please consider donating,<br>it'd help a lot, and it'd help keep "e694.net" and "e994.net" up!</i>
   <br>
   <br>
   <a href="https://www.buymeacoffee.com/kckarnige" target="_blank">
@@ -27,7 +27,7 @@
 
 >*(A-Z/1-9) FIX -> 694*
 
-For anyone who wants to send someone else an eSix or eNine post. Embeds show post info like rating, score, date posted, and the presumed author based on tags. It also supports video for Discord embeds! All you need to do is switch "e621" with "e694" in the URL; this also works with "e926"!
+For anyone who wants to send someone else an eSix or eNine post. Embeds show post info like rating, score, date posted, and the presumed author based on tags. It also supports video for Discord embeds! All you need to do is switch the last two numbers in "e621" with "94" in the URL; this even works with "e926"!
 
 ----
 
@@ -38,7 +38,9 @@ For anyone who wants to send someone else an eSix or eNine post. Embeds show pos
 - If the post is a video containing sound, the embed will let you know!
 - The author count in embeds also includes contributors.
 - Media display size in embeds are consistent, meaning pixel art can be seen in embeds just as well as a 4K image!
-- Just change your link's domain from 'e621.net' to 'e694.net', and you're good to go!
+- Just change the last two numbers in the domain! 
+  - *e621.net -> e694.net*
+  - *e926.net -> e994.net*
 
 ----
 
