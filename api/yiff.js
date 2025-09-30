@@ -6,6 +6,7 @@ export default async function handler(req, res) {
   const host = req.headers.host || "";
 
   var unfilteredList = [];
+  var safeMode = true;
   try {
     var whitelistFetch = await fetch(`https://${host}/unfiltered.json`);
     unfilteredList = await whitelistFetch.json();
@@ -25,8 +26,10 @@ export default async function handler(req, res) {
   var baseDomain;
   if (unfilteredList.includes(host)) {
     baseDomain = "e621.net";
+    safeMode = false;
   } else {
     baseDomain = "e926.net";
+    safeMode = true;
   }
 
   try {
@@ -68,6 +71,11 @@ export default async function handler(req, res) {
       s: "Safe",
       q: "Questionable",
       e: "Explicit"
+    };
+
+    const safeModeText = {
+      true: " (Safe Mode)",
+      false: ""
     };
 
     if (ext === "json") {
@@ -114,7 +122,7 @@ export default async function handler(req, res) {
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
           <meta property="og:type" content="${isVideo ? 'video.other' : 'article'}" />
-          <meta property="og:site_name" content="${baseDomain} via e694">
+          <meta property="og:site_name" content="${baseDomain} via e694${safeModeText[safeMode]}">
           ${isVideo ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
