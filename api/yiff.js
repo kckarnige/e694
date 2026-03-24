@@ -1,29 +1,41 @@
 export default async function handler(req, res) {
-  const {
-    slug,
-    embed = false
-  } = req.query;
+  const { slug, embed = false } = req.query;
   const host = req.headers.host || "";
 
-  var unfilteredList = [];
-  var safeMode = true;
+  let unfilteredList = [];
+  let safeMode = true;
+
   try {
-    var whitelistFetch = await fetch(`https://${host}/unfiltered.json`);
+    const whitelistFetch = await fetch(`https://${host}/unfiltered.json`);
     unfilteredList = await whitelistFetch.json();
-  }
-  catch (err) {
+  } catch (err) {
     console.error("Couldn't grab the unfiltered domain whitelist:", err);
-    return res.status(500).json({ error: `Couldn't grab the unfiltered domain whitelist: ${err}` });
+    return res
+      .status(500)
+      .json({ error: `Couldn't grab the unfiltered domain whitelist: ${err}` });
   }
 
   if (!slug) {
-    return res.status(400).json({ error: "Invalid or missing post ID and extension" });
+    return res.status(400).json({ error: "Invalid or missing post ID / MD5 / extension" });
   }
 
-  const [postId, ext] = slug.split('.');
-  const postDataUrl = `https://e621.net/posts/${postId}.json`;
+  const slugValue = Array.isArray(slug) ? slug[0] : String(slug);
 
-  var baseDomain;
+  // Split only on the final dot so "627635.json" and "md5hash.json+oembed" work cleanly
+  const lastDot = slugValue.lastIndexOf(".");
+  const rawIdentifier = lastDot === -1 ? slugValue : slugValue.slice(0, lastDot);
+  const ext = lastDot === -1 ? undefined : slugValue.slice(lastDot + 1);
+
+  const isMd5 = /^[a-f0-9]{32}$/i.test(rawIdentifier);
+  const isNumericId = /^\d+$/.test(rawIdentifier);
+
+  if (!isMd5 && !isNumericId) {
+    return res.status(400).json({
+      error: "Slug must be a numeric post ID or a 32-character MD5 hash",
+    });
+  }
+
+  let baseDomain;
   if (unfilteredList.includes(host)) {
     baseDomain = "e621.net";
     safeMode = false;
@@ -33,56 +45,102 @@ export default async function handler(req, res) {
   }
 
   try {
-    const postData = await fetch(postDataUrl, {
-      headers: {
-        "User-Agent": "e694/1.7"
-      }
-    });
+    let postInfo;
+    let postId;
 
-    if (!postData.ok) {
-      return res.status(postData.status).json({ error: "Failed to fetch post data" });
+    if (isMd5) {
+      const searchUrl = new URL("https://e621.net/posts.json");
+      searchUrl.searchParams.set("limit", "1");
+      searchUrl.searchParams.set("tags", `md5:${rawIdentifier}`);
+
+      const md5Search = await fetch(searchUrl.toString(), {
+        headers: {
+          "User-Agent": "e694/1.7 (by yourname on e621)",
+          "Accept": "application/json",
+        },
+      });
+
+      if (!md5Search.ok) {
+        return res.status(md5Search.status).json({
+          error: "Failed to search post by MD5",
+        });
+      }
+
+      const md5Json = await md5Search.json();
+      postInfo = md5Json?.posts?.[0];
+
+      if (!postInfo) {
+        return res.status(404).json({ error: "No post found for that MD5 hash" });
+      }
+
+      postId = String(postInfo.id);
+    } else {
+      postId = rawIdentifier;
+
+      const postDataUrl = `https://e621.net/posts/${postId}.json`;
+      const postData = await fetch(postDataUrl, {
+        headers: {
+          "User-Agent": "e694/1.7 (by yourname on e621)",
+          "Accept": "application/json",
+        },
+      });
+
+      if (!postData.ok) {
+        return res.status(postData.status).json({ error: "Failed to fetch post data" });
+      }
+
+      const postJson = await postData.json();
+      postInfo = postJson?.post;
     }
 
-    const postJson = await postData.json();
-    const postInfo = postJson?.post;
-    const fileExt = ext ?? postInfo.file.ext;
+    if (!postInfo) {
+      return res.status(404).json({ error: "Post data not found" });
+    }
+
+    const fileExt = ext ?? postInfo.file?.ext;
     const previewUrl = postInfo.preview?.url;
     const postUrl = `https://${host}/posts/${postId}/file.${fileExt}`;
-    const isVideo = (!((baseDomain == "e926.net") && postInfo.rating !== "s") && ["webm", "mp4"].includes(fileExt));
-    var postAuthor;
-    var sndWarn = "";
-    var authors = (postInfo.tags.artist).concat(postInfo.tags.contributor ?? []);
-    var exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
-    var realAuthors = authors.filter(real => !exclude.includes(real));
+    const isVideo =
+      !((baseDomain === "e926.net") && postInfo.rating !== "s") &&
+      ["webm", "mp4"].includes(fileExt);
 
-    if (postInfo.tags.artist.includes("sound_warning")
-      || postInfo.tags.meta.includes("sound")
-      && !postInfo.tags.meta.includes("no_sound")) {
-      sndWarn = "\n🔊 Sound Warning! 🔊"
+    let postAuthor;
+    let sndWarn = "";
+    const authors = (postInfo.tags.artist || []).concat(postInfo.tags.contributor || []);
+    const exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
+    const realAuthors = authors.filter((real) => !exclude.includes(real));
+
+    if (
+      postInfo.tags.artist?.includes("sound_warning") ||
+      (postInfo.tags.meta?.includes("sound") && !postInfo.tags.meta?.includes("no_sound"))
+    ) {
+      sndWarn = "\n🔊 Sound Warning! 🔊";
     }
 
-    const formattedDate = new Date(postInfo.created_at).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    const formattedDate = new Date(postInfo.created_at).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
 
     const ratingMap = {
       s: "Safe",
       q: "Questionable",
-      e: "Explicit"
+      e: "Explicit",
     };
 
     const safeModeText = {
       true: " (Safe Mode)",
-      false: ""
+      false: "",
     };
 
+    // For .json requests, return a consistent shape.
+    // If resolved through MD5 search, emulate /posts/{id}.json shape.
     if (ext === "json") {
-      return res.status(200).json(postJson);
+      return res.status(200).json({ post: postInfo });
     }
 
-    if (!postInfo || !postInfo.file?.url) {
+    if (!postInfo.file?.url) {
       return res.status(404).json({ error: "Media URL not found in post data" });
     }
 
@@ -90,18 +148,22 @@ export default async function handler(req, res) {
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json({
-        "author_name": `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}`,
-        "provider_name": isVideo ? `Video from ${baseDomain} • e694` : `Image from ${baseDomain} • e694`
+        author_name: `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}`,
+        provider_name: isVideo
+          ? `Video from ${baseDomain} • e694`
+          : `Image from ${baseDomain} • e694`,
       });
     }
 
     if (embed === "true") {
-
-      if (realAuthors.length === 1) {
-        postAuthor = `${realAuthors[0]}`
+      if (realAuthors.length === 0) {
+        postAuthor = "unknown";
+      } else if (realAuthors.length === 1) {
+        postAuthor = `${realAuthors[0]}`;
       } else {
-        postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`
+        postAuthor = `${realAuthors[0]} +${realAuthors.length - 1}`;
       }
+
       const embedHtml = `
         <!DOCTYPE html>
         <html>
@@ -121,35 +183,43 @@ export default async function handler(req, res) {
 
           <!-- Open Graph -->
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
-          <meta property="og:type" content="${isVideo ? 'video.other' : 'article'}" />
+          <meta property="og:type" content="${isVideo ? "video.other" : "article"}" />
           <meta property="og:site_name" content="${baseDomain} via e694${safeModeText[safeMode]}">
-          ${isVideo ? `
+          ${
+            isVideo
+              ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
-          ` : `
+          `
+              : `
             <meta property="og:image" content="${postUrl}" />
-          `}
+          `
+          }
 
           <!-- Twitter -->
-          <meta property="twitter:card" content="${isVideo ? 'player' : 'summary_large_image'}" />
+          <meta property="twitter:card" content="${isVideo ? "player" : "summary_large_image"}" />
           <meta property="twitter:title" content="Post from ${baseDomain}" />
-          ${isVideo ? `
+          ${
+            isVideo
+              ? `
             <meta property="twitter:image" content="${previewUrl}" />
             <meta property="twitter:player" content="${postUrl}" />
             <meta property="twitter:player:width" content="1280" />
             <meta property="twitter:player:height" content="720" />
             <meta property="twitter:player:stream" content="${postUrl}" />
             <meta property="twitter:player:stream:content_type" content="video/${fileExt}" />
-          ` : `
+          `
+              : `
             <meta property="twitter:image" content="${postUrl}" />
-          `}
+          `
+          }
           <style>html,body{background:#012e57;}</style>
         </head>
         <body>
-            <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
+          <script>window.location = "https://${baseDomain}/posts/${postId}"</script>
         </body>
         </html>
       `.trim();
@@ -159,11 +229,15 @@ export default async function handler(req, res) {
     }
 
     const imageResponse = await fetch(
-      ((baseDomain == "e926.net") && postInfo.rating !== "s") ? "https://e694.net/unsafe.png" : postInfo.file.url, {
-      headers: {
-        "User-Agent": "e694/1.7"
+      (baseDomain === "e926.net" && postInfo.rating !== "s")
+        ? "https://e694.net/unsafe.png"
+        : postInfo.file.url,
+      {
+        headers: {
+          "User-Agent": "e694/1.7 (by yourname on e621)",
+        },
       }
-    });
+    );
 
     if (!imageResponse.ok) {
       return res.status(imageResponse.status).json({ error: "Failed to fetch image" });
@@ -171,19 +245,19 @@ export default async function handler(req, res) {
 
     const arrayBuffer = await imageResponse.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
-    const contentType = imageResponse.headers.get("content-type") || 'image/jpeg';
-    res.setHeader('Cache-Control', 'public, max-age=300, stale-while-revalidate=60');
+    const contentType = imageResponse.headers.get("content-type") || "image/jpeg";
+
+    res.setHeader("Cache-Control", "public, max-age=300, stale-while-revalidate=60");
     res.setHeader("Content-Disposition", `inline; filename="${postId}.${fileExt}"`);
     res.setHeader("Content-Type", contentType);
     res.setHeader("Access-Control-Allow-Origin", "*");
 
     return res.status(200).send(buffer);
-
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json({
       error: "Failed to fetch from API",
-      details: error.message
+      details: error.message,
     });
   }
-};
+}
