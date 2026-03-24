@@ -1,4 +1,13 @@
 export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
+
+  if (req.method === "OPTIONS") {
+    return res.status(204).end();
+  }
+
+  const version = "1.8.1"
   const { slug, embed = false } = req.query;
   const host = req.headers.host || "";
 
@@ -55,7 +64,7 @@ export default async function handler(req, res) {
 
       const md5Search = await fetch(searchUrl.toString(), {
         headers: {
-          "User-Agent": "e694/1.8",
+          "User-Agent": `e694/${version}`,
           "Accept": "application/json",
         },
       });
@@ -80,7 +89,7 @@ export default async function handler(req, res) {
       const postDataUrl = `https://e621.net/posts/${postId}.json`;
       const postData = await fetch(postDataUrl, {
         headers: {
-          "User-Agent": "e694/1.8",
+          "User-Agent": `e694/${version}`,
           "Accept": "application/json",
         },
       });
@@ -185,26 +194,24 @@ export default async function handler(req, res) {
           <meta property="og:title" content="#${postId} by ${postAuthor}" />
           <meta property="og:type" content="${isVideo ? "video.other" : "article"}" />
           <meta property="og:site_name" content="${baseDomain} via e694${safeModeText[safeMode]}">
-          ${
-            isVideo
-              ? `
+          ${isVideo
+          ? `
             <meta property="og:video" content="${postUrl}" />
             <meta property="og:video:type" content="video/${fileExt}" />
             <meta property="og:video:width" content="1280" />
             <meta property="og:video:height" content="720" />
             <meta property="og:image" content="${previewUrl}" />
           `
-              : `
+          : `
             <meta property="og:image" content="${postUrl}" />
           `
-          }
+        }
 
           <!-- Twitter -->
           <meta property="twitter:card" content="${isVideo ? "player" : "summary_large_image"}" />
           <meta property="twitter:title" content="Post from ${baseDomain}" />
-          ${
-            isVideo
-              ? `
+          ${isVideo
+          ? `
             <meta property="twitter:image" content="${previewUrl}" />
             <meta property="twitter:player" content="${postUrl}" />
             <meta property="twitter:player:width" content="1280" />
@@ -212,10 +219,10 @@ export default async function handler(req, res) {
             <meta property="twitter:player:stream" content="${postUrl}" />
             <meta property="twitter:player:stream:content_type" content="video/${fileExt}" />
           `
-              : `
+          : `
             <meta property="twitter:image" content="${postUrl}" />
           `
-          }
+        }
           <style>html,body{background:#012e57;}</style>
         </head>
         <body>
@@ -234,7 +241,7 @@ export default async function handler(req, res) {
         : postInfo.file.url,
       {
         headers: {
-          "User-Agent": "e694/1.8",
+          "User-Agent": `e694/${version}`,
         },
       }
     );
