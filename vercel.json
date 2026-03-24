@@ -12,6 +12,10 @@
     {
       "source": "/posts/:postId/file:ext",
       "destination": "/api/yiff.min.js?slug=:postId:ext"
+    },
+    {
+      "source": "/walltaker/:path*",
+      "destination": "https://walltaker.e694.net*"
     }
   ]
 }
