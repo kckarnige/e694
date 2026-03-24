@@ -38,6 +38,7 @@ For anyone who wants to send someone else an eSix or eNine post. Embeds show pos
 - If the post is a video containing sound, the embed will let you know!
 - The author count in embeds also includes contributors.
 - Media display size in embeds are consistent, meaning pixel art can be seen in embeds just as well as a 4K image!
+- You can get JSON based on a post's MD5 hash! (1.8+)
 - Just change the last two numbers in the domain! 
   - *e621.net -> e694.net*
   - *e926.net -> e994.net*

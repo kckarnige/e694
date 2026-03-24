@@ -55,7 +55,7 @@ export default async function handler(req, res) {
 
       const md5Search = await fetch(searchUrl.toString(), {
         headers: {
-          "User-Agent": "e694/1.7 (by yourname on e621)",
+          "User-Agent": "e694/1.8",
           "Accept": "application/json",
         },
       });
@@ -80,7 +80,7 @@ export default async function handler(req, res) {
       const postDataUrl = `https://e621.net/posts/${postId}.json`;
       const postData = await fetch(postDataUrl, {
         headers: {
-          "User-Agent": "e694/1.7 (by yourname on e621)",
+          "User-Agent": "e694/1.8",
           "Accept": "application/json",
         },
       });
@@ -234,7 +234,7 @@ export default async function handler(req, res) {
         : postInfo.file.url,
       {
         headers: {
-          "User-Agent": "e694/1.7 (by yourname on e621)",
+          "User-Agent": "e694/1.8",
         },
       }
     );
