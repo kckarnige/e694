@@ -1,5 +1,5 @@
 export function onRequest(context) {
-  const url = new URL(context.request.url);
+  const url = new URL(context.params.path);
   const path = url.pathname;
 
   // Match all 3 Vercel routes:
