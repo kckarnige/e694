@@ -16,7 +16,7 @@ export function onRequest(context) {
     let target;
 
     // Case 1: /posts/:postId
-    if (!path.includes("/file")) {
+    if (!match[2] && !path.endsWith("/file")) {
       target = `/api/yiff.min.js?slug=${postId}&embed=true`;
     }
     // Case 2 & 3: /posts/:postId/file OR /file.ext
