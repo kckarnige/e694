@@ -1,0 +1,11 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+
+/unfiltered.json
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
+
+/unsafe.png
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=86400

@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "e694",
+  "main": "src/index.js",
+  "compatibility_date": "2026-07-22",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash",
+    "run_worker_first": [
+      "/posts/*",
+      "/api/*",
+      "/api.min.js"
+    ]
+  }
+}

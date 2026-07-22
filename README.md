@@ -1,105 +1,121 @@
-<img  align="left" alt="e694" src="./public/icon.svg">
+# e694 — Cloudflare Workers port
 
-<p align="right">
-  <br>
-  <br>
-  <i>If you'd like to support what I do, please consider donating,<br>it'd help a lot, and it'd help keep "e694.net" and "e994.net" up!</i>
-  <br>
-  <br>
-  <a href="https://www.buymeacoffee.com/kckarnige" target="_blank">
-    <img alt="buymeacoffee-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/buymeacoffee-singular_vector.svg">
-  </a>
-  <br>
-  <a href="https://github.com/sponsors/kckarnige" target="_blank">
-    <img alt="ghsponsors-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/ghsponsors-singular_vector.svg">
-  </a>
-  <br>
-  <a href="https://ko-fi.com/kckarnige" target="_blank">
-    <img alt="kofi-singular" height="40" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/compact/donate/kofi-singular_vector.svg">
-  </a>
-  <br>
-  <i>I also take <a href="https://cash.app/$kckarnige">CashApp</a> (Yes, I am that broke)</i>
-</p>
+<img align="left" alt="e694" src="./public/icon.svg" width="128">
 
-<br>
-<br>
-<br>
+This repository is the complete Cloudflare Workers conversion of e694 1.8.1. It serves the existing static files through Workers Static Assets and implements the former Vercel serverless handler as a native Fetch API Worker.
 
->*(A-Z/1-9) FIX -> 694*
+<br clear="left">
 
-For anyone who wants to send someone else an eSix or eNine post. Embeds show post info like rating, score, date posted, and the presumed author based on tags. It also supports video for Discord embeds! All you need to do is switch the last two numbers in "e621" with "94" in the URL; this even works with "e926"!
+## Compatibility
 
-----
+The following public URLs are preserved:
 
-### Why should I use this?
+- `/posts/:postId` — embed page
+- `/posts/:postId/file` — raw media
+- `/posts/:postId/file.ext` — raw media with an explicit extension
+- `/posts/:postId/file.json` — e621-style post JSON
+- `/posts/:postId/file.json+oembed` — oEmbed JSON
+- `/api/yiff.js?slug=...` — legacy direct API URL
+- `/api/yiff.min.js?slug=...` — legacy minified API URL
+- `/api.min.js?slug=...` — legacy root API URL
+- Numeric post IDs and 32-character MD5 hashes
+- Safe/filtered and unfiltered host behavior from `public/unfiltered.json`
 
-- No restrictions on who or what can fetch content.
-- Adding '/file' at the end gives you the raw media file.
-- If the post is a video containing sound, the embed will let you know!
-- The author count in embeds also includes contributors.
-- Media display size in embeds are consistent, meaning pixel art can be seen in embeds just as well as a 4K image!
-- You can get JSON based on a post's MD5 hash! (1.8+)
-- Just change the last two numbers in the domain! 
-  - *e621.net -> e694.net*
-  - *e926.net -> e994.net*
+The Worker also streams media instead of buffering the entire file and forwards byte-range requests, which improves video playback and avoids the Node `Buffer` dependency used by the Vercel version.
 
-----
+## Local development
 
-## Official Domains:
+Requirements: Node.js 20 or newer.
 
-- e694.net
-- e.e994.net
-- e621.e694.net
-- e621.e994.net
-- e621.kckarnige.online
-- e621-media.vercel.app
+```bash
+npm install
+npm test
+npm run dev
+```
 
-**Filtered Domains:**
+Wrangler prints a local URL. Test routes such as:
 
-- e994.net
-- s.e694.net
-- e926.e694.net
-- e926.e994.net
-- e694.kckarnige.online
-- e694.vercel.app
-- e994.vercel.app 
-- e926.kckarnige.online
-- e926-media.vercel.app
----
-<h3>What's the difference?</h3>
-eSix is known for it's explicit content, however they do have a alternative domain which displays EXCLUSIVELY posts rated as "safe" called "eNine" (e926.net).
-<br><br>
-When using a filtered domain, if the post is meant to link to anything above a "safe" rating, it will not be displayed, even if the media file for the post itself is trying to be fetched.
-<br><br>
-Attempting to do so will serve this image:
-<br><br>
-<img width="256px" src="./public/unsafe.png" />
+```text
+http://localhost:8787/posts/5302549
+http://localhost:8787/posts/5302549/file
+```
 
-## Link Examples:
+Localhost is treated as filtered unless you add `localhost` to `public/unfiltered.json` while testing.
 
-### File Example:
+## Deploy from the command line
 
-`https://e994.net/posts/5302549/file`  
-or  
-`https://e994.net/posts/5302549/file.gif`
+```bash
+npm install
+npx wrangler login
+npm run deploy
+```
 
-[![example](https://e994.net/posts/5302549/file)](https://e994.net/posts/5302549/file)
+No build step, database, KV namespace, R2 bucket, or secrets are required.
 
-### Embed Example:
+## Deploy from GitHub through Cloudflare
 
-`https://s.e694.net/posts/5302549`
+1. Create a new GitHub repository and upload the contents of this folder to the repository root.
+2. In Cloudflare, open **Workers & Pages** and import the Git repository as a Worker.
+3. Leave the build command empty.
+4. Use `npx wrangler deploy` as the deploy command.
+5. Deploy the project.
 
-![embed example](https://s.e694.net/embed_example.png)
+Cloudflare uses the Wrangler version pinned in `package.json`.
 
-Works with videos too!
+## Attach the domains
 
-![video example](https://e694.net/video_example.png)
+For each hostname, open the Worker in Cloudflare and go to **Settings → Domains & Routes → Add → Custom Domain**. Add every hostname individually; Worker Custom Domains require an exact hostname and do not use wildcard matching.
 
-## Self Hosting
+Suggested unfiltered domains, matching `public/unfiltered.json`:
 
-This was made with Vercel, and as such it's pretty simple to make your own deployment!
-Here's the *magic 'deploy' button.*
+```text
+e694.net
+e.e994.net
+e621.e694.net
+e621.e994.net
+e621.kckarnige.online
+```
 
-<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkckarnige%2Fe694"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
+Suggested filtered domains from the original project:
 
-<sub>I will not be providing *any* assistance with deploying, you're on your own. If self deploying is even a thing on your mind, you definitely have the brain-power do it on your own, I believe in you. :3</sub> 
+```text
+e994.net
+s.e694.net
+e926.e694.net
+e926.e994.net
+e694.kckarnige.online
+e926.kckarnige.online
+```
+
+If a hostname already has a CNAME or another conflicting DNS record, remove that record before adding it as a Worker Custom Domain. Cloudflare creates the replacement DNS record and certificate.
+
+## Filter configuration
+
+`public/unfiltered.json` is the source of truth. A request hostname included in that array uses e621 and permits all ratings. Any hostname absent from that array uses e926 safe mode and returns `public/unsafe.png` for non-safe media.
+
+After changing the file, commit and redeploy.
+
+## Project structure
+
+```text
+.
+├── src/index.js          Cloudflare Worker and routing logic
+├── public/               Static assets bundled with the Worker
+├── test/worker.test.js   Route and response tests
+├── wrangler.jsonc        Worker/static-assets configuration
+├── package.json          Development and deployment commands
+└── source-assets/        Non-deployed editable source artwork
+```
+
+## Validation
+
+```bash
+npm test
+npm run check
+```
+
+`npm run check` performs a Wrangler dry-run bundle, including the static asset manifest, without deploying.
+
+## License
+
+The original project license is retained in `LICENSE`.

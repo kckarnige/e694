@@ -1,0 +1,19 @@
+{
+  "name": "e694-cloudflare",
+  "version": "1.8.1-cloudflare.1",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Workers port of e694",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "wrangler deploy --dry-run --outdir .wrangler-dist",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "wrangler": "^4.76.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
