@@ -3,6 +3,12 @@
   "name": "e694",
   "main": "src/index.js",
   "compatibility_date": "2026-07-22",
+  "vars": {
+    "E621_USER_AGENT": "e694/1.8.1-cloudflare.2 (by kckarnige; https://github.com/kckarnige/e694)"
+  },
+  "observability": {
+    "enabled": true
+  },
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",

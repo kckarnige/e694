@@ -239,3 +239,53 @@ test("rejects malformed identifiers", async () => {
   assert.equal(response.status, 400);
   assert.match((await response.json()).error, /numeric post ID/);
 });
+
+test("reports upstream API 403 errors with an actionable diagnostic", async () => {
+  await withFetchMock(async (urlOrRequest) => {
+    const url = new URL(urlOrRequest instanceof Request ? urlOrRequest.url : String(urlOrRequest));
+    if (url.hostname === "e621.net" && url.pathname === "/posts/123.json") {
+      return new Response("Forbidden", { status: 403 });
+    }
+    throw new Error(`Unexpected fetch: ${url}`);
+  }, async () => {
+    const response = await worker.fetch(
+      new Request("https://e694.net/api/yiff.js?slug=123.json"),
+      makeEnv(),
+      {},
+    );
+    const json = await response.json();
+
+    assert.equal(response.status, 403);
+    assert.equal(json.upstream_status, 403);
+    assert.equal(json.upstream_service, "e621 API");
+    assert.match(json.error, /refused the Worker request/);
+    assert.match(json.hint, /E621_USER_AGENT/);
+  });
+});
+
+test("sends the configured e621 identity and optional Basic authentication", async () => {
+  const env = {
+    ...makeEnv(),
+    E621_USER_AGENT: "e694-test/1.0 (contact: maintainer@example.com)",
+    E621_LOGIN: "test_user",
+    E621_API_KEY: "test_key",
+  };
+
+  await withFetchMock(async (urlOrRequest, init = {}) => {
+    const url = new URL(urlOrRequest instanceof Request ? urlOrRequest.url : String(urlOrRequest));
+    if (url.hostname === "e621.net" && url.pathname === "/posts/123.json") {
+      const headers = new Headers(init.headers);
+      assert.equal(headers.get("user-agent"), env.E621_USER_AGENT);
+      assert.equal(headers.get("authorization"), `Basic ${btoa("test_user:test_key")}`);
+      return Response.json({ post: safePost });
+    }
+    throw new Error(`Unexpected fetch: ${url}`);
+  }, async () => {
+    const response = await worker.fetch(
+      new Request("https://e694.net/api/yiff.js?slug=123.json"),
+      env,
+      {},
+    );
+    assert.equal(response.status, 200);
+  });
+});

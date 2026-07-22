@@ -1,4 +1,6 @@
-const VERSION = "1.8.1-cloudflare.1";
+const VERSION = "1.8.1-cloudflare.2";
+const DEFAULT_E621_USER_AGENT =
+  `e694/${VERSION} (by kckarnige; https://github.com/kckarnige/e694)`;
 const E621_API_ORIGIN = "https://e621.net";
 
 const CORS_HEADERS = Object.freeze({
@@ -133,7 +135,7 @@ async function handleYiffRequest({ request, env, slug, embed }) {
     const safeMode = !unfilteredDomains.has(hostname);
     const baseDomain = safeMode ? "e926.net" : "e621.net";
 
-    const { postInfo, postId } = await fetchPost(rawIdentifier, isMd5);
+    const { postInfo, postId } = await fetchPost(rawIdentifier, isMd5, env);
 
     if (!postInfo) {
       return jsonResponse({ error: "Post data not found" }, 404, {}, isHead);
@@ -236,7 +238,17 @@ async function handleYiffRequest({ request, env, slug, embed }) {
     console.error("e694 Worker error:", error);
 
     if (error instanceof UpstreamError) {
-      return jsonResponse({ error: error.publicMessage }, error.status, {}, isHead);
+      return jsonResponse(
+        {
+          error: error.publicMessage,
+          upstream_status: error.status,
+          upstream_service: error.service,
+          ...(error.hint ? { hint: error.hint } : {}),
+        },
+        error.status,
+        {},
+        isHead,
+      );
     }
 
     return jsonResponse(
@@ -283,18 +295,18 @@ async function getUnfilteredDomains(env, requestUrl) {
   return cachedUnfilteredDomains;
 }
 
-async function fetchPost(identifier, isMd5) {
+async function fetchPost(identifier, isMd5, env) {
   if (isMd5) {
     const searchUrl = new URL("/posts.json", E621_API_ORIGIN);
     searchUrl.searchParams.set("limit", "1");
     searchUrl.searchParams.set("tags", `md5:${identifier}`);
 
     const response = await fetch(searchUrl, {
-      headers: upstreamApiHeaders(),
+      headers: upstreamApiHeaders(env),
     });
 
     if (!response.ok) {
-      throw new UpstreamError(response.status, "Failed to search post by MD5");
+      throw await makeUpstreamError(response, "e621 API", "Failed to search post by MD5", env);
     }
 
     const json = await response.json();
@@ -308,22 +320,66 @@ async function fetchPost(identifier, isMd5) {
   }
 
   const response = await fetch(`${E621_API_ORIGIN}/posts/${identifier}.json`, {
-    headers: upstreamApiHeaders(),
+    headers: upstreamApiHeaders(env),
   });
 
   if (!response.ok) {
-    throw new UpstreamError(response.status, "Failed to fetch post data");
+    throw await makeUpstreamError(response, "e621 API", "Failed to fetch post data", env);
   }
 
   const json = await response.json();
   return { postInfo: json?.post, postId: String(identifier) };
 }
 
-function upstreamApiHeaders() {
-  return {
-    "User-Agent": `e694/${VERSION} (Cloudflare Workers)`,
+function upstreamUserAgent(env) {
+  const configured = String(env?.E621_USER_AGENT ?? "").trim();
+  return configured || DEFAULT_E621_USER_AGENT;
+}
+
+function upstreamApiHeaders(env) {
+  const headers = new Headers({
+    "User-Agent": upstreamUserAgent(env),
     Accept: "application/json",
-  };
+  });
+
+  const login = String(env?.E621_LOGIN ?? "").trim();
+  const apiKey = String(env?.E621_API_KEY ?? "").trim();
+  if (login && apiKey) {
+    headers.set("Authorization", `Basic ${btoa(`${login}:${apiKey}`)}`);
+  }
+
+  return headers;
+}
+
+async function makeUpstreamError(response, service, fallbackMessage, env) {
+  let upstreamMessage = "";
+  try {
+    const text = await response.clone().text();
+    upstreamMessage = text.replace(/\s+/g, " ").trim().slice(0, 240);
+  } catch {
+    // The upstream response body is diagnostic only.
+  }
+
+  let publicMessage = fallbackMessage;
+  let hint;
+
+  if (response.status === 403) {
+    publicMessage = `${service} refused the Worker request (HTTP 403)`;
+    hint =
+      "Set a contact-identifying E621_USER_AGENT. If e621 still refuses Cloudflare egress, configure E621_LOGIN and E621_API_KEY as Worker secrets.";
+  } else if (response.status === 429) {
+    hint = "The upstream API rate limit was reached; retry later and avoid repeated uncached requests.";
+  }
+
+  console.error("Upstream request failed", {
+    service,
+    status: response.status,
+    upstreamMessage,
+    userAgent: upstreamUserAgent(env),
+    authenticated: Boolean(env?.E621_LOGIN && env?.E621_API_KEY),
+  });
+
+  return new UpstreamError(response.status, publicMessage, { service, hint });
 }
 
 async function proxyMedia({
@@ -348,7 +404,7 @@ async function proxyMedia({
     );
   } else {
     const upstreamHeaders = new Headers({
-      "User-Agent": `e694/${VERSION} (Cloudflare Workers)`,
+      "User-Agent": upstreamUserAgent(env),
     });
 
     for (const headerName of ["accept", "range", "if-range", "if-none-match", "if-modified-since"]) {
@@ -364,7 +420,12 @@ async function proxyMedia({
   }
 
   if (!sourceResponse.ok && sourceResponse.status !== 206 && sourceResponse.status !== 304) {
-    throw new UpstreamError(sourceResponse.status, "Failed to fetch image");
+    throw await makeUpstreamError(
+      sourceResponse,
+      serveUnsafePlaceholder ? "bundled unsafe placeholder" : "e621 media CDN",
+      "Failed to fetch image",
+      env,
+    );
   }
 
   const headers = new Headers();
@@ -523,10 +584,12 @@ function escapeHtmlAttribute(value) {
 }
 
 class UpstreamError extends Error {
-  constructor(status, publicMessage) {
+  constructor(status, publicMessage, { service = "upstream", hint } = {}) {
     super(publicMessage);
     this.name = "UpstreamError";
     this.status = status;
     this.publicMessage = publicMessage;
+    this.service = service;
+    this.hint = hint;
   }
 }

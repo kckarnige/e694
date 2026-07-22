@@ -1,6 +1,6 @@
 {
   "name": "e694-cloudflare",
-  "version": "1.8.1-cloudflare.1",
+  "version": "1.8.1-cloudflare.2",
   "private": true,
   "type": "module",
   "description": "Cloudflare Workers port of e694",

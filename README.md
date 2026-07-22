@@ -116,6 +116,31 @@ npm run check
 
 `npm run check` performs a Wrangler dry-run bundle, including the static asset manifest, without deploying.
 
+## Fixing an upstream HTTP 403
+
+The Worker uses a contact-identifying `E621_USER_AGENT` by default. You can override it under `vars` in `wrangler.jsonc`. Keep the value descriptive and include a project/contact URL.
+
+If e621 still returns HTTP 403 to Cloudflare egress, add an e621 username and API key as encrypted Worker secrets:
+
+```bash
+npx wrangler secret put E621_LOGIN
+npx wrangler secret put E621_API_KEY
+npm run deploy
+```
+
+Do not place the API key in `wrangler.jsonc` or commit it to Git. Authentication is sent only to the e621 JSON API, never to media CDN hosts.
+
+To distinguish an upstream 403 from a Cloudflare security block, request a JSON route directly:
+
+```bash
+curl -i "https://YOUR-DOMAIN/api/yiff.js?slug=5302549.json"
+```
+
+- An e694 JSON response containing `upstream_service` means the Worker ran and the named upstream returned the status.
+- A Cloudflare-branded HTML error page means Cloudflare Access, WAF, or another zone security feature blocked the visitor before the Worker response.
+
+View live Worker diagnostics with `npx wrangler tail` or from **Workers & Pages → your Worker → Logs → Live**.
+
 ## License
 
 The original project license is retained in `LICENSE`.
