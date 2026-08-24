@@ -1,6 +1,0 @@
-node_modules/
-.wrangler/
-.wrangler-dist/
-.dev.vars
-.env
-.DS_Store
