@@ -1,3 +1,9 @@
+import { readFile } from "node:fs/promises";
+
+const unfilteredList = JSON.parse(
+  await readFile(new URL("../public/unfiltered.json", import.meta.url), "utf8")
+);
+
 export default async function handler(req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
@@ -7,22 +13,11 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
 
-  const version = "1.8.1"
-  const { slug, embed = false } = req.query;
+  const version = "1.9.0"
+  const { slug, embed = false } = req.e694Query ?? req.query;
   const host = req.headers.host || "";
 
-  let unfilteredList = [];
   let safeMode = true;
-
-  try {
-    const whitelistFetch = await fetch(`https://${host}/unfiltered.json`);
-    unfilteredList = await whitelistFetch.json();
-  } catch (err) {
-    console.error("Couldn't grab the unfiltered domain whitelist:", err);
-    return res
-      .status(500)
-      .json({ error: `Couldn't grab the unfiltered domain whitelist: ${err}` });
-  }
 
   if (!slug) {
     return res.status(400).json({ error: "Invalid or missing post ID / MD5 / extension" });

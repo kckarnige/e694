@@ -1,0 +1,16 @@
+{
+  "name": "e694",
+  "version": "1.9.0",
+  "private": true,
+  "type": "module",
+  "description": "your a freak",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "dependencies": {
+    "express": "5.1.0"
+  }
+}

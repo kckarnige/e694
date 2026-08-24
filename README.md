@@ -45,27 +45,12 @@ For anyone who wants to send someone else an eSix or eNine post. Embeds show pos
 
 ----
 
-## Official Domains:
+### Official Domains:
 
 - e694.net
-- e.e994.net
-- e621.e694.net
-- e621.e994.net
-- e621.kckarnige.online
-- e621-media.vercel.app
+- e994.net (Filtered)
 
-**Filtered Domains:**
 
-- e994.net
-- s.e694.net
-- e926.e694.net
-- e926.e994.net
-- e694.kckarnige.online
-- e694.vercel.app
-- e994.vercel.app 
-- e926.kckarnige.online
-- e926-media.vercel.app
----
 <h3>What's the difference?</h3>
 eSix is known for it's explicit content, however they do have a alternative domain which displays EXCLUSIVELY posts rated as "safe" called "eNine" (e926.net).
 <br><br>
@@ -97,9 +82,10 @@ Works with videos too!
 
 ## Self Hosting
 
-This was made with Vercel, and as such it's pretty simple to make your own deployment!
-Here's the *magic 'deploy' button.*
+This was originally made with Vercel, but after a few huge roadblocks, it was ported to [Render](https://render.com/), but it's pretty simple to make your own deployment!
 
-<a href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fkckarnige%2Fe694"><img src="https://vercel.com/button" alt="Deploy with Vercel"/></a>
+All you have to do is make a new project with a blueprint and use this repo!
 
-<sub>I will not be providing *any* assistance with deploying, you're on your own. If self deploying is even a thing on your mind, you definitely have the brain-power do it on your own, I believe in you. :3</sub> 
+Make sure to configure your `unfiltered.json` accordingly!
+
+<sub>I will not be providing *any* assistance with deploying, you're on your own. If self deploying is even a thing on your mind, you definitely have the brain-power do it on your own, I believe in you. :3</sub>
