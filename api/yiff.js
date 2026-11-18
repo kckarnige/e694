@@ -142,7 +142,7 @@ export default async function handler(req, res) {
 
     if (
       postInfo.tags?.includes("sound_warning") ||
-      (postInfo.tags?.includes("sound") && !postInfo.tags.meta?.includes("no_sound"))
+      (postInfo.tags?.includes("sound") && !postInfo.tags?.includes("no_sound"))
     ) {
       sndWarn = "\n🔊 Sound Warning! 🔊";
     }
