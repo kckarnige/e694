@@ -118,7 +118,8 @@ export default async function handler(req, res) {
 
       const response = await fetch(url, {
         headers: {
-          "User-Agent": "MyProject/1.0"
+          "User-Agent": `e694/${version}`,
+          "Accept": "application/json",
         }
       });
 
@@ -134,7 +135,7 @@ export default async function handler(req, res) {
     let postAuthor;
     let sndWarn = "";
     const authors = await Promise.all(
-      post.tags.artist.map(getArtistInfo)
+      postInfo.tags.map(getArtistInfo)
     );
     const exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
     const realAuthors = authors.filter((real) => !exclude.includes(real));
