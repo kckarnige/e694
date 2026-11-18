@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(204).end();
   }
 
-  const version = "1.9.0"
+  const version = "1.9.1"
   const { slug, embed = false } = req.e694Query ?? req.query;
   const host = req.headers.host || "";
 
@@ -94,15 +94,15 @@ export default async function handler(req, res) {
       }
 
       const postJson = await postData.json();
-      postInfo = postJson?.post;
+      postInfo = postJson;
     }
 
     if (!postInfo) {
       return res.status(404).json({ error: "Post data not found" });
     }
 
-    const fileExt = ext ?? postInfo.file?.ext;
-    const previewUrl = postInfo.preview?.url;
+    const fileExt = ext ?? postInfo.files.meta?.ext;
+    const previewUrl = postInfo.files.preview?.url;
     const postUrl = `https://${host}/posts/${postId}/file.${fileExt}`;
     const isVideo =
       !((baseDomain === "e926.net") && postInfo.rating !== "s") &&
@@ -144,7 +144,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ post: postInfo });
     }
 
-    if (!postInfo.file?.url) {
+    if (!postInfo.files.original?.url) {
       return res.status(404).json({ error: "Media URL not found in post data" });
     }
 
@@ -233,7 +233,7 @@ export default async function handler(req, res) {
     const imageResponse = await fetch(
       (baseDomain === "e926.net" && postInfo.rating !== "s")
         ? "https://e694.net/unsafe.png"
-        : postInfo.file.url,
+        : postInfo.files.original.url,
       {
         headers: {
           "User-Agent": `e694/${version}`,
