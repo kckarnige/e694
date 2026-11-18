@@ -135,14 +135,14 @@ export default async function handler(req, res) {
     let postAuthor;
     let sndWarn = "";
     const authors = await Promise.all(
-      postInfo.tags.map(getArtistInfo)
+      postInfo.tags?.map(getArtistInfo)
     );
     const exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
     const realAuthors = authors.filter((real) => !exclude.includes(real));
 
     if (
-      postInfo.tags.artist?.includes("sound_warning") ||
-      (postInfo.tags.meta?.includes("sound") && !postInfo.tags.meta?.includes("no_sound"))
+      postInfo.tags?.includes("sound_warning") ||
+      (postInfo.tags?.includes("sound") && !postInfo.tags.meta?.includes("no_sound"))
     ) {
       sndWarn = "\n🔊 Sound Warning! 🔊";
     }
