@@ -108,9 +108,34 @@ export default async function handler(req, res) {
       !((baseDomain === "e926.net") && postInfo.rating !== "s") &&
       ["webm", "mp4"].includes(fileExt);
 
+    async function getArtistInfo(artistName) {
+      const url = new URL("https://e621.net/artists.json");
+
+      url.searchParams.set(
+        "search[name_matches]",
+        artistName
+      );
+
+      const response = await fetch(url, {
+        headers: {
+          "User-Agent": "MyProject/1.0"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`e621 API error: ${response.status}`);
+      }
+
+      const artists = await response.json();
+
+      return artists[0] ?? null;
+    }
+
     let postAuthor;
     let sndWarn = "";
-    const authors = (postInfo.tags.artist || []).concat(postInfo.tags.contributor || []);
+    const authors = await Promise.all(
+      post.tags.artist.map(getArtistInfo)
+    );
     const exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
     const realAuthors = authors.filter((real) => !exclude.includes(real));
 
