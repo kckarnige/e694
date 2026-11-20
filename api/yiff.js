@@ -168,7 +168,19 @@ export default async function handler(req, res) {
     }
 
     async function getArtistTags(post) {
-      const tagNames = [...new Set(post.tags ?? [])];
+      // Modern e621 format: tags are already separated by category.
+      if (
+        post.tags &&
+        !Array.isArray(post.tags) &&
+        Array.isArray(post.tags.artist)
+      ) {
+        return post.tags.artist;
+      }
+
+      // Legacy format: tags are a flat array of strings.
+      const tagNames = [...new Set(
+        Array.isArray(post.tags) ? post.tags : []
+      )];
 
       // Only look up tags that aren't already cached.
       const missingTags = tagNames.filter(
