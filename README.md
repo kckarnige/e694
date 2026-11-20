@@ -96,6 +96,6 @@ Make sure to configure your `unfiltered.json` accordingly!
 
 The artist tag search code is vibe/cuck-coded with Z.ai.
 
-Most of the code was made with AI assistance as a guide to.
+Most of the code was made with AI "assistance" actually.
 
-Sorry to disappoint, I'm tired and don't have time to look into things like this anymore like I used to, I have mouths to feed.
+Sorry to disappoint, but **I am already starting work on a rewrite that I plan to work on without the assistance of AI**, to be full compatible with the new e6 JSON formatting and being as efficient as possible.
