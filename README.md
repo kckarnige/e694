@@ -91,3 +91,11 @@ All you have to do is make a new project with a blueprint and use this repo!
 Make sure to configure your `unfiltered.json` accordingly!
 
 <sub>I will not be providing *any* assistance with deploying, you're on your own. If self deploying is even a thing on your mind, you definitely have the brain-power do it on your own, I believe in you. :3</sub>
+
+## Code "Reference"
+
+The artist tag search code is vibe/cuck-coded with Z.ai.
+
+Most of the code was made with AI assistance as a guide to.
+
+Sorry to disappoint, I'm tired and don't have time to look into things like this anymore like I used to, I have mouths to feed.

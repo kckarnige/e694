@@ -55,7 +55,10 @@ export default async function handler(req, res) {
     if (isMd5) {
       const searchUrl = new URL("https://e621.net/posts.json");
       searchUrl.searchParams.set("limit", "1");
-      searchUrl.searchParams.set("tags", `md5:${rawIdentifier}`);
+      searchUrl.searchParams.set(
+        "tags",
+        `md5:${rawIdentifier.toLowerCase()} status:any`
+      );
 
       const md5Search = await fetch(searchUrl.toString(), {
         headers: {
@@ -71,10 +74,24 @@ export default async function handler(req, res) {
       }
 
       const md5Json = await md5Search.json();
-      postInfo = md5Json?.posts?.[0];
+
+      // Support both the traditional { posts: [...] } response
+      // and a direct array response.
+      const posts = Array.isArray(md5Json)
+        ? md5Json
+        : md5Json?.posts ?? [];
+
+      // Confirm that the returned post actually matches.
+      postInfo = posts.find(
+        post =>
+          post.files?.meta?.md5?.toLowerCase() ===
+          rawIdentifier.toLowerCase()
+      );
 
       if (!postInfo) {
-        return res.status(404).json({ error: "No post found for that MD5 hash" });
+        return res.status(404).json({
+          error: "No post found for that MD5 hash",
+        });
       }
 
       postId = String(postInfo.id);
@@ -90,12 +107,15 @@ export default async function handler(req, res) {
       });
 
       if (!postData.ok) {
-        return res.status(postData.status).json({ error: "Failed to fetch post data" });
+        return res.status(postData.status).json({
+          error: "Failed to fetch post data",
+        });
       }
 
       const postJson = await postData.json();
       postInfo = postJson;
     }
+
 
     if (!postInfo) {
       return res.status(404).json({ error: "Post data not found" });
@@ -108,35 +128,32 @@ export default async function handler(req, res) {
       !((baseDomain === "e926.net") && postInfo.rating !== "s") &&
       ["webm", "mp4"].includes(fileExt);
 
-    async function getArtistInfo(artistName) {
-      const url = new URL("https://e621.net/artists.json");
+    const catcach = JSON.parse(localStorage.getItem('e621-cats') || '{}');
 
-      url.searchParams.set(
-        "search[name_matches]",
-        artistName
-      );
+    let last = 0;
+    async function apiGet(path) {
+      const wait = 550 - (Date.now() - last);
+      if (wait > 0) await new Promise(r => setTimeout(r, wait));
+      last = Date.now();
+      const res = await fetch(API + path);
+      if (!res.ok) throw new Error(`e621 API error ${res.status}`);
+      return res.json();
+    }
 
-      const response = await fetch(url, {
-        headers: {
-          "User-Agent": `e694/${version}`,
-          "Accept": "application/json",
+    async function getArtistTags(post) {
+      for (const name of post.tags) {
+        if (catcach[name] === undefined) {
+          const [tag] = await apiGet(`/tags.json?search[name]=${encodeURIComponent(name)}`);
+          catcach[name] = tag ? tag.category : null;
         }
-      });
-
-      if (!response.ok) {
-        throw new Error(`e621 API error: ${response.status}`);
       }
-
-      const artists = await response.json();
-
-      return artists[0] ?? null;
+      localStorage.setItem('e621-cats', JSON.stringify(catcach));
+      return post.tags.filter(t => catcach[t] === 1);
     }
 
     let postAuthor;
     let sndWarn = "";
-    const authors = await Promise.all(
-      postInfo.tags?.map(getArtistInfo)
-    );
+    const authors = await getArtistTags(postInfo);
     const exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
     const realAuthors = authors.filter((real) => !exclude.includes(real));
 
@@ -178,7 +195,7 @@ export default async function handler(req, res) {
     if (ext === "json+oembed" || accept.includes("application/json+oembed")) {
       res.setHeader("Content-Type", "application/json+oembed");
       return res.status(200).json({
-        author_name: `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.score.total}${sndWarn}`,
+        author_name: `Posted on ${formattedDate}\nRating: ${ratingMap[postInfo.rating]} ‎ • ‎ Score: ${postInfo.stats.score.total}${sndWarn}`,
         provider_name: isVideo
           ? `Video from ${baseDomain} • e694`
           : `Image from ${baseDomain} • e694`,
