@@ -167,76 +167,44 @@ export default async function handler(req, res) {
       return request;
     }
 
+
     async function getArtistTags(post) {
-      // Modern e621 format: tags are already separated by category.
-      if (
-        post.tags &&
-        !Array.isArray(post.tags) &&
-        Array.isArray(post.tags.artist)
-      ) {
-        return post.tags.artist;
-      }
+      const tagNames = [...new Set(post.tags ?? [])];
+      const authors = [];
 
-      // Legacy format: tags are a flat array of strings.
-      const tagNames = [...new Set(
-        Array.isArray(post.tags) ? post.tags : []
-      )];
+      for (const name of tagNames) {
+        if (tagCategoryCache.has(name)) {
+          if (tagCategoryCache.get(name) === 1) {
+            authors.push(name);
+          }
+          continue;
+        }
 
-      // Only look up tags that aren't already cached.
-      const missingTags = tagNames.filter(
-        name => !tagCategoryCache.has(name)
-      );
-
-      // Fetch missing tags in batches of 100.
-      for (let i = 0; i < missingTags.length; i += 100) {
-        const batch = missingTags.slice(i, i + 100);
-
-        // Escape regex special characters so tag names are matched literally.
-        const escapedNames = batch.map(name =>
-          name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-        );
-
-        const searchUrl = new URL(
-          `https://${baseDomain}/tags.json`
-        );
-
-        searchUrl.searchParams.set(
-          "search[name_matches]",
-          `^(?:${escapedNames.join("|")})$`
-        );
-
-        searchUrl.searchParams.set("limit", "320");
+        const searchUrl = new URLSearchParams({
+          "search[name_matches]": name,
+          "search[category]": "1",
+          limit: "320",
+        });
 
         const tags = await apiGet(
-          searchUrl.pathname + searchUrl.search
+          `/tags.json?${searchUrl.toString()}`
         );
 
-        console.log("Artist lookup batch:", batch);
-        console.log("Artist lookup response:", tags);
+        // Match the exact tag, not partial name matches.
+        const exactMatch = tags.find(
+          tag => tag.name === name && tag.category === 1
+        );
 
-        // Store returned tag categories.
-        for (const tag of tags) {
-          tagCategoryCache.set(tag.name, tag.category);
-        }
+        tagCategoryCache.set(name, exactMatch ? 1 : null);
 
-        // Cache missing tags too, so we don't repeatedly search for them.
-        for (const name of batch) {
-          if (!tagCategoryCache.has(name)) {
-            tagCategoryCache.set(name, null);
-          }
+        if (exactMatch) {
+          authors.push(name);
         }
       }
 
-      console.log("Artist candidates:", tagNames.map(name => ({
-        name,
-        category: tagCategoryCache.get(name)
-      })));
-
-      // Category 1 = artist.
-      return tagNames.filter(
-        name => tagCategoryCache.get(name) === 1
-      );
+      return authors;
     }
+
 
     let postAuthor;
     let sndWarn = "";
