@@ -1,4 +1,10 @@
 import { readFile } from "node:fs/promises";
+// In-memory e621 tag category cache
+const tagCategoryCache = new Map();
+
+// Shared API request rate limiter
+let lastTagApiRequest = 0;
+let tagApiQueue = Promise.resolve();
 
 const unfilteredList = JSON.parse(
   await readFile(new URL("../public/unfiltered.json", import.meta.url), "utf8")
@@ -128,7 +134,90 @@ export default async function handler(req, res) {
       !((baseDomain === "e926.net") && postInfo.rating !== "s") &&
       ["webm", "mp4"].includes(fileExt);
 
-    const catcach = JSON.parse(localStorage.getItem('e621-cats') || '{}');
+
+    async function apiGet(path) {
+      const request = tagApiQueue.then(async () => {
+        const wait = 550 - (Date.now() - lastTagApiRequest);
+
+        if (wait > 0) {
+          await new Promise(resolve => setTimeout(resolve, wait));
+        }
+
+        lastTagApiRequest = Date.now();
+
+        const response = await fetch(
+          `https://${baseDomain}${path}`,
+          {
+            headers: {
+              "User-Agent": `e694/${version}`,
+              "Accept": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`e621 API error ${response.status}`);
+        }
+
+        return response.json();
+      });
+
+      tagApiQueue = request.catch(() => { });
+
+      return request;
+    }
+
+    async function getArtistTags(post) {
+      const tagNames = [...new Set(post.tags ?? [])];
+
+      // Only look up tags that aren't already cached.
+      const missingTags = tagNames.filter(
+        name => !tagCategoryCache.has(name)
+      );
+
+      // Fetch missing tags in batches of 100.
+      for (let i = 0; i < missingTags.length; i += 100) {
+        const batch = missingTags.slice(i, i + 100);
+
+        // Escape regex special characters so tag names are matched literally.
+        const escapedNames = batch.map(name =>
+          name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        );
+
+        const searchUrl = new URL(
+          `https://${baseDomain}/tags.json`
+        );
+
+        searchUrl.searchParams.set(
+          "search[name_matches]",
+          `^(?:${escapedNames.join("|")})$`
+        );
+
+        searchUrl.searchParams.set("limit", "320");
+
+        const tags = await apiGet(
+          searchUrl.pathname + searchUrl.search
+        );
+
+        // Store returned tag categories.
+        for (const tag of tags) {
+          tagCategoryCache.set(tag.name, tag.category);
+        }
+
+        // Cache missing tags too, so we don't repeatedly search for them.
+        for (const name of batch) {
+          if (!tagCategoryCache.has(name)) {
+            tagCategoryCache.set(name, null);
+          }
+        }
+      }
+
+      // Category 1 = artist.
+      return tagNames.filter(
+        name => tagCategoryCache.get(name) === 1
+      );
+    }
+
 
     let last = 0;
     async function apiGet(path) {
@@ -140,16 +229,50 @@ export default async function handler(req, res) {
       return res.json();
     }
 
-    async function getArtistTags(post) {
-      for (const name of post.tags) {
-        if (catcach[name] === undefined) {
-          const [tag] = await apiGet(`/tags.json?search[name]=${encodeURIComponent(name)}`);
-          catcach[name] = tag ? tag.category : null;
-        }
-      }
-      localStorage.setItem('e621-cats', JSON.stringify(catcach));
-      return post.tags.filter(t => catcach[t] === 1);
+async function getArtistTags(post) {
+  const tagNames = [...new Set(post.tags ?? [])];
+
+  // Find tags that haven't been cached.
+  const missingTags = tagNames.filter(
+    name => !tagCategoryCache.has(name)
+  );
+
+  // Process missing tags in batches of 100.
+  for (let i = 0; i < missingTags.length; i += 100) {
+    const batch = missingTags.slice(i, i + 100);
+
+    // Escape regex special characters.
+    const escapedNames = batch.map(name =>
+      name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    );
+
+    const searchUrl = new URLSearchParams({
+      "search[name_matches]": `^(?:${escapedNames.join("|")})$`,
+      limit: "320",
+    });
+
+    const tags = await apiGet(
+      `/tags.json?${searchUrl.toString()}`
+    );
+
+    // Cache returned categories.
+    for (const tag of tags) {
+      tagCategoryCache.set(tag.name, tag.category);
     }
+
+    // Cache tags that weren't returned.
+    for (const name of batch) {
+      if (!tagCategoryCache.has(name)) {
+        tagCategoryCache.set(name, null);
+      }
+    }
+  }
+
+  // Category 1 represents artist tags.
+  return tagNames.filter(
+    name => tagCategoryCache.get(name) === 1
+  );
+}
 
     let postAuthor;
     let sndWarn = "";
