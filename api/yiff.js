@@ -218,62 +218,6 @@ export default async function handler(req, res) {
       );
     }
 
-
-    let last = 0;
-    async function apiGet(path) {
-      const wait = 550 - (Date.now() - last);
-      if (wait > 0) await new Promise(r => setTimeout(r, wait));
-      last = Date.now();
-      const res = await fetch(API + path);
-      if (!res.ok) throw new Error(`e621 API error ${res.status}`);
-      return res.json();
-    }
-
-async function getArtistTags(post) {
-  const tagNames = [...new Set(post.tags ?? [])];
-
-  // Find tags that haven't been cached.
-  const missingTags = tagNames.filter(
-    name => !tagCategoryCache.has(name)
-  );
-
-  // Process missing tags in batches of 100.
-  for (let i = 0; i < missingTags.length; i += 100) {
-    const batch = missingTags.slice(i, i + 100);
-
-    // Escape regex special characters.
-    const escapedNames = batch.map(name =>
-      name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-    );
-
-    const searchUrl = new URLSearchParams({
-      "search[name_matches]": `^(?:${escapedNames.join("|")})$`,
-      limit: "320",
-    });
-
-    const tags = await apiGet(
-      `/tags.json?${searchUrl.toString()}`
-    );
-
-    // Cache returned categories.
-    for (const tag of tags) {
-      tagCategoryCache.set(tag.name, tag.category);
-    }
-
-    // Cache tags that weren't returned.
-    for (const name of batch) {
-      if (!tagCategoryCache.has(name)) {
-        tagCategoryCache.set(name, null);
-      }
-    }
-  }
-
-  // Category 1 represents artist tags.
-  return tagNames.filter(
-    name => tagCategoryCache.get(name) === 1
-  );
-}
-
     let postAuthor;
     let sndWarn = "";
     const authors = await getArtistTags(postInfo);
