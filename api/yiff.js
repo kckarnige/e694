@@ -128,7 +128,7 @@ export default async function handler(req, res) {
     }
 
     const fileExt = ext ?? postInfo.files.meta?.ext;
-    const previewUrl = postInfo.files.preview?.url;
+    const previewUrl = postInfo.files.preview?.jpg ?? postInfo.files.preview?.url;
     const postUrl = `https://${host}/posts/${postId}/file.${fileExt}`;
     const isVideo =
       !((baseDomain === "e926.net") && postInfo.rating !== "s") &&
