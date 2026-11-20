@@ -205,13 +205,7 @@ export default async function handler(req, res) {
       return authors;
     }
 
-
-    let postAuthor;
     let sndWarn = "";
-    const authors = await getArtistTags(postInfo);
-    const exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
-    const realAuthors = authors.filter((real) => !exclude.includes(real));
-
     if (
       postInfo.tags?.includes("sound_warning") ||
       (postInfo.tags?.includes("sound") && !postInfo.tags?.includes("no_sound"))
@@ -258,6 +252,13 @@ export default async function handler(req, res) {
     }
 
     if (embed === "true") {
+
+      const authors = await getArtistTags(postInfo);
+      const exclude = ["sound_warning", "third-party_edit", "conditional_dnp"];
+      const realAuthors = authors.filter((real) => !exclude.includes(real));
+
+      let postAuthor;
+
       if (realAuthors.length === 0) {
         postAuthor = "unknown";
       } else if (realAuthors.length === 1) {
