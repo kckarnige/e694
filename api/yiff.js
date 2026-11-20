@@ -211,6 +211,9 @@ export default async function handler(req, res) {
           searchUrl.pathname + searchUrl.search
         );
 
+        console.log("Artist lookup batch:", batch);
+        console.log("Artist lookup response:", tags);
+
         // Store returned tag categories.
         for (const tag of tags) {
           tagCategoryCache.set(tag.name, tag.category);
@@ -223,6 +226,11 @@ export default async function handler(req, res) {
           }
         }
       }
+
+      console.log("Artist candidates:", tagNames.map(name => ({
+        name,
+        category: tagCategoryCache.get(name)
+      })));
 
       // Category 1 = artist.
       return tagNames.filter(
