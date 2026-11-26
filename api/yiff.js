@@ -7,7 +7,7 @@ let lastTagApiRequest = 0;
 let tagApiQueue = Promise.resolve();
 
 const unfilteredList = JSON.parse(
-  await readFile(new URL("../public/unfiltered.json", import.meta.url), "utf8")
+  await readFile("./public/unfiltered.json", "utf8")
 );
 
 export default async function handler(req, res) {
